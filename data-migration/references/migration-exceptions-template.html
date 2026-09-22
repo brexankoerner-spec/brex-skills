@@ -1,0 +1,618 @@
+<title>MLD Services - Migration Exceptions</title>
+<style>
+:root {
+  --bg: #eef1ef;
+  --surface: #ffffff;
+  --surface-2: #e1e7e3;
+  --ink: #17211f;
+  --ink-dim: #55635e;
+  --ink-faint: #8a978f;
+  --line: #cdd6d1;
+  --accent: #b9591f;
+  --accent-strong: #8f4315;
+  --accent-tint: #f3dfcc;
+  --ok: #2f7a52;
+  --ok-tint: #dcece2;
+  --crit: #a3372b;
+  --crit-tint: #f2dcd8;
+  --warn: #2f6fa3;
+  --warn-tint: #dbe7f0;
+  --font-display: "Archivo Narrow", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101513;
+    --surface: #171e1c;
+    --surface-2: #1f2825;
+    --ink: #e9f0ec;
+    --ink-dim: #93a49d;
+    --ink-faint: #64726c;
+    --line: #2a3532;
+    --accent: #e0863f;
+    --accent-strong: #f3a565;
+    --accent-tint: #3a2a1c;
+    --ok: #5fbf8a;
+    --ok-tint: #1c332a;
+    --crit: #e2695a;
+    --crit-tint: #3a2320;
+    --warn: #7bb0dd;
+    --warn-tint: #1c2c3a;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #101513;
+  --surface: #171e1c;
+  --surface-2: #1f2825;
+  --ink: #e9f0ec;
+  --ink-dim: #93a49d;
+  --ink-faint: #64726c;
+  --line: #2a3532;
+  --accent: #e0863f;
+  --accent-strong: #f3a565;
+  --accent-tint: #3a2a1c;
+  --ok: #5fbf8a;
+  --ok-tint: #1c332a;
+  --crit: #e2695a;
+  --crit-tint: #3a2320;
+  --warn: #7bb0dd;
+  --warn-tint: #1c2c3a;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  padding: 0 0 4rem;
+}
+
+::selection { background: var(--accent-tint); color: var(--accent-strong); }
+
+a { color: inherit; }
+
+.masthead {
+  background: var(--surface);
+  border-bottom: 3px solid var(--ink);
+  padding: 1.75rem clamp(1.25rem, 4vw, 3rem) 1.5rem;
+}
+
+.masthead-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: 74rem;
+  margin: 0 auto;
+}
+
+.masthead-id {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 0.5rem;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: condensed;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  font-size: clamp(1.9rem, 4.4vw, 3.1rem);
+  line-height: 0.98;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.masthead-sub {
+  font-family: var(--font-body);
+  color: var(--ink-dim);
+  font-size: 0.95rem;
+  margin: 0.5rem 0 0;
+  max-width: 40rem;
+}
+
+.masthead-meta {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0.15rem 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-dim);
+  text-align: right;
+}
+.masthead-meta dt { grid-column: 1; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); text-align: left;}
+.masthead-meta dd { grid-column: 2; margin: 0; color: var(--ink); font-variant-numeric: tabular-nums; }
+.masthead-meta { display: block; }
+.masthead-meta .mrow { display: flex; justify-content: space-between; gap: 1rem; padding: 0.05rem 0; border-bottom: 1px dashed var(--line); }
+.masthead-meta .mrow span:first-child { text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); }
+.masthead-meta .mrow span:last-child { color: var(--ink); }
+
+main {
+  max-width: 74rem;
+  margin: 0 auto;
+  padding: 2.25rem clamp(1.25rem, 4vw, 3rem) 0;
+}
+
+.lede {
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--ink-dim);
+  max-width: 46rem;
+  margin: 0 0 2.25rem;
+}
+.lede strong { color: var(--ink); font-weight: 700; }
+
+/* summary grid */
+.summary-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+.section-label {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-stretch: condensed;
+  font-size: 1rem;
+  color: var(--ink);
+  margin: 0;
+}
+.section-label .n {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  margin-right: 0.5rem;
+}
+.total-pill {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-dim);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  padding: 0.22rem 0.6rem;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+.total-pill b { color: var(--accent-strong); font-weight: 700; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 2.75rem;
+}
+
+.tile {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.9rem 1rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-top: 3px solid var(--line);
+}
+.tile:hover { border-color: var(--ink-faint); transform: translateY(-1px); }
+.tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tile[data-clean="true"] { border-top-color: var(--ok); }
+.tile[data-clean="false"] { border-top-color: var(--accent); }
+
+.tile-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-dim);
+  font-weight: 600;
+}
+.tile-count {
+  font-family: var(--font-mono);
+  font-size: 1.7rem;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.tile[data-clean="true"] .tile-count { color: var(--ok); }
+.tile[data-clean="false"] .tile-count { color: var(--accent-strong); }
+.tile-frac {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+}
+.tile-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.tile-bar > span { display: block; height: 100%; background: var(--accent); }
+.tile[data-clean="true"] .tile-bar > span { background: var(--ok); width: 0 !important; }
+
+/* entity sections */
+.entity {
+  border-top: 1px solid var(--line);
+  padding: 2rem 0;
+  scroll-margin-top: 1rem;
+}
+.entity:last-child { padding-bottom: 0; }
+
+.entity-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 1rem;
+}
+.entity-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: condensed;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 1.55rem;
+  margin: 0;
+}
+.entity-title .idx { color: var(--ink-faint); font-family: var(--font-mono); font-weight: 500; margin-right: 0.5rem; font-size: 1.05rem; letter-spacing: 0; }
+
+.entity-clean {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--ok-tint);
+  border: 1px solid var(--ok);
+  border-radius: 4px;
+  padding: 0.85rem 1.1rem;
+  color: var(--ok);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.entity-clean .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--ok); flex-shrink: 0; }
+.entity-clean .n { font-family: var(--font-mono); color: var(--ink-dim); font-weight: 400; margin-left: auto; }
+
+/* reason bar */
+.reasonbar {
+  display: flex;
+  height: 1.6rem;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  margin-bottom: 0.65rem;
+}
+.reasonbar > span { display: block; height: 100%; }
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  margin-bottom: 1.25rem;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--ink-dim);
+}
+.legend-swatch { width: 0.6rem; height: 0.6rem; border-radius: 2px; flex-shrink: 0; }
+.legend-item b { color: var(--ink); font-family: var(--font-mono); font-weight: 600; }
+
+/* table */
+.tablewrap {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: auto;
+  max-height: 26rem;
+  background: var(--surface);
+}
+table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+thead th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-2);
+  text-align: left;
+  padding: 0.55rem 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-dim);
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+  z-index: 1;
+}
+tbody td {
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  color: var(--ink);
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--surface-2); }
+td.mono, th.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.dim { color: var(--ink-dim); }
+td.wrap { white-space: normal; min-width: 12rem; }
+
+.chip {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.02em;
+  padding: 0.12rem 0.45rem;
+  border-radius: 100px;
+  white-space: nowrap;
+  margin: 0.1rem 0.25rem 0.1rem 0;
+  border: 1px solid transparent;
+}
+.chip-missing_field { background: var(--accent-tint); color: var(--accent-strong); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+.chip-zero_dollar { background: var(--surface-2); color: var(--ink-dim); border-color: var(--line); }
+.chip-review { background: var(--crit-tint); color: var(--crit); border-color: color-mix(in srgb, var(--crit) 35%, transparent); }
+.chip-upload_error { background: var(--warn-tint); color: var(--warn); border-color: color-mix(in srgb, var(--warn) 35%, transparent); }
+
+.rowcount {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  margin-top: 0.5rem;
+}
+
+footer {
+  max-width: 74rem;
+  margin: 3rem auto 0;
+  padding: 1.5rem clamp(1.25rem, 4vw, 3rem) 0;
+  border-top: 1px solid var(--line);
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .masthead-row { flex-direction: column; align-items: flex-start; }
+  .masthead-meta { text-align: left; width: 100%; }
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+
+<div class="masthead">
+  <div class="masthead-row">
+    <div>
+      <p class="masthead-id">Data Migration &middot; Exception Manifest</p>
+      <h1 id="acct-name">Account</h1>
+      <p class="masthead-sub" id="acct-sub"></p>
+    </div>
+    <div class="masthead-meta" id="masthead-meta"></div>
+  </div>
+</div>
+
+<main>
+  <p class="lede">
+    Every row below was scanned during the migration and held back because it can't safely
+    be matched, is missing a field Podium requires, or (for attachments) failed to upload
+    &mdash; nothing here has been imported. Rows are grouped by category with the specific
+    reason each one was excluded, so anything worth fixing by hand can be found quickly.
+  </p>
+
+  <div class="summary-head">
+    <p class="section-label"><span class="n" id="excl-total"></span>Excluded across all categories</p>
+  </div>
+  <div class="grid" id="tile-grid"></div>
+
+  <div id="entities"></div>
+
+  <footer>
+    Generated from the cleaned migration output for <span id="foot-acct"></span>. &ldquo;Excluded&rdquo;
+    rows are held out of the Lighthouse upload on purpose &mdash; each one still exists in its source
+    CSV for manual reconciliation. Percentages are excluded &divide; total scanned per category.
+  </footer>
+</main>
+
+<script id="data-json" type="application/json">{"account":"MLD Services","vertical":"HVAC & Plumbing","generated":"2026-08-17","reasonLabels":{"no_title":{"label":"Missing job title","group":"missing_field"},"no_name":{"label":"Missing name","group":"missing_field"},"no_contact":{"label":"No phone or email on file","group":"missing_field"},"no_job":{"label":"Not linked to a job","group":"missing_field"},"zero_dollar":{"label":"$0 total (voided / duplicate / no-charge)","group":"zero_dollar"},"other":{"label":"Ambiguous match — needs manual review","group":"review"},"too_large":{"label":"File exceeds 16 MB upload limit","group":"upload_error"},"invalid_s3_key":{"label":"Invalid S3 key — filename has consecutive periods","group":"upload_error"},"upload_failed":{"label":"Upload failed (server error) — retry needed","group":"upload_error"},"invalid_multipart":{"label":"Invalid multipart upload — filename has special/invisible characters","group":"upload_error"},"no_matching_job":{"label":"No matching Tempest job for this import_job_id","group":"review"}},"entities":[{"key":"jobs","label":"Job History","total":2574,"excluded":282,"rows":[{"id":"2754","name":"Justin Ferrell","title":"","date":"2026-08-12","tech":"Austin Fontaine; Braden Naab","status":"archived","type":"ONE_OFF","city":"Leander","reasons":["no_title"]},{"id":"2750","name":"Marion Jameson","title":"","date":"2026-08-10","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_title"]},{"id":"2751","name":"Mariel Hall","title":"","date":"2026-08-10","tech":"","status":"action_required","type":"ONE_OFF","city":"Leander","reasons":["no_title"]},{"id":"2749","name":"Hugo Gutierrez","title":"","date":"2026-08-10","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_title"]},{"id":"387","name":"Bobby Lacey","title":"","date":"2024-03-18","tech":"Braden Naab; Austin Fontaine","status":"upcoming","type":"RECURRING","city":"Leander","reasons":["no_title"]},{"id":"2532","name":"Emily  Hernandez","title":"","date":"2026-11-11","tech":"","status":"upcoming","type":"RECURRING","city":"Round Rock","reasons":["no_title"]},{"id":"2739","name":"Zvi Goldshtein","title":"","date":"2026-07-29","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Leander","reasons":["no_title"]},{"id":"2629","name":"Lagerquist, Les (Home)","title":"","date":"2026-06-22","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Lago Vista","reasons":["no_title"]},{"id":"2292","name":"Mike  Kopecky","title":"","date":"2026-01-16","tech":"Mike Dodge; Braden Naab","status":"archived","type":"ONE_OFF","city":"Leander","reasons":["no_title"]},{"id":"2718","name":"J.R. Romero","title":"","date":"2026-07-23","tech":"","status":"archived","type":"ONE_OFF","city":"Georgetown","reasons":["no_title"]},{"id":"2288","name":"J.R. Romero","title":"","date":"2026-01-12","tech":"","status":"archived","type":"ONE_OFF","city":"Leander","reasons":["no_title"]},{"id":"2685","name":"Johnson","title":"Punchlist","date":"2026-07-08","tech":"Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Burnet","reasons":["no_contact"]},{"id":"2285","name":"Johnson","title":"Walking New Build w/GC Michael Wells","date":"2026-01-12","tech":"Mike Dodge; Braden Naab","status":"archived","type":"ONE_OFF","city":"Burnet","reasons":["no_contact"]},{"id":"2181","name":"Darin Gray","title":"","date":"2025-10-27","tech":"","status":"archived","type":"ONE_OFF","city":"Horseshoe Bay","reasons":["no_title"]},{"id":"2126","name":"Jennifer Laubach-Bragg","title":"","date":"2025-10-16","tech":"Austin Fontaine","status":"requires_invoicing","type":"RECURRING","city":"Liberty Hill","reasons":["no_title"]},{"id":"2609","name":"Marcy Phillips","title":"","date":"2026-06-11","tech":"Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_title"]},{"id":"2536","name":"Michael Kenoyer","title":"","date":"2026-05-12","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_title"]},{"id":"2597","name":"Lagerquist, Les (Home)","title":"","date":"2026-06-05","tech":"Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Lago Vista","reasons":["no_title"]},{"id":"2598","name":"Lagerquist, Les (Home)","title":"","date":"2026-06-08","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Lago Vista","reasons":["no_title"]},{"id":"2563","name":"Nicole Willis","title":"","date":"2026-05-28","tech":"Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_title"]},{"id":"2572","name":"Tom  Carter","title":"","date":"2026-05-22","tech":"Austin Fontaine; Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_title"]},{"id":"2208","name":"Vijay Hehea","title":"LG VRF Systems","date":"2025-11-05","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1888","name":"Magnolia Scofield","title":"No power to therm","date":"2025-07-18","tech":"Braden Naab; Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"2084","name":"Paula McCaul","title":"","date":"2025-09-30","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_title"]},{"id":"1984","name":"Windsor Village","title":"Replace Compressor","date":"2025-08-21","tech":"Austin Fontaine; Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"2066","name":"Windsor Village","title":"Nest Therm not working","date":"2025-09-09","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"2049","name":"Windsor Village","title":"Ductwork Repair","date":"2025-09-11","tech":"Braden Naab; Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"2047","name":"Windsor Village","title":"AC not working","date":"2025-09-04","tech":"Braden Naab; Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"2003","name":"Windsor Village","title":"Replace Nest Therm","date":"2025-08-22","tech":"Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"2000","name":"Windsor Village","title":"Replace Nest Therm","date":"2025-08-22","tech":"Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1999","name":"Windsor Village","title":"Replace Nest Therm","date":"2025-08-22","tech":"Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1998","name":"Windsor Village","title":"Replace Nest Therm","date":"2025-08-21","tech":"Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1997","name":"Windsor Village","title":"Replace Nest Therm","date":"2025-08-21","tech":"Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1996","name":"Windsor Village","title":"Replace Nest Therm","date":"2025-08-28","tech":"Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1995","name":"Windsor Village","title":"Replace Nest Therm","date":"2025-08-29","tech":"Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1986","name":"Windsor Village","title":"AC not working","date":"2025-08-19","tech":"Braden Naab; Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1972","name":"Windsor Village","title":"AC Not Cooling","date":"2025-08-14","tech":"Braden Naab; Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1961","name":"Amli Mueller 4","title":"","date":"2025-08-12","tech":"Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_title"]},{"id":"1954","name":"Waters Edge","title":"","date":"2025-08-11","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Salado","reasons":["no_title"]},{"id":"1949","name":"Windsor Village","title":"AC Not Cooling","date":"2025-08-08","tech":"Austin Fontaine; Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1942","name":"Windsor Village","title":"AC not working","date":"2025-08-05","tech":"Austin Fontaine; Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1935","name":"Windsor Village","title":"Mini Split Not Working","date":"2025-08-05","tech":"Braden Naab; Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1920","name":"Windsor Village","title":"AC not working","date":"2025-07-28","tech":"Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1887","name":"Magnolia Scofield","title":"Replace TXV","date":"2025-07-23","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1877","name":"Windsor Village","title":"AC not working","date":"2025-07-16","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1845","name":"Magnolia Scofield","title":"AC Not Cooling","date":"2025-07-18","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"2007","name":"Windsor Village","title":"Air Flow Issues","date":"2025-09-04","tech":"Austin Fontaine; Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"2002","name":"Windsor Village","title":"Replace Nest Therm","date":"2025-08-21","tech":"Braden Naab; Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"2001","name":"Windsor Village","title":"Replace Nest Therm","date":"2025-08-21","tech":"Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1856","name":"Windsor Village","title":"Install Vent in Bedroom","date":"2025-07-16","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1689","name":"Windsor Village","title":"Replace Evap Coil","date":"2025-06-02","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1912","name":"Emily  Hernandez","title":"","date":"2025-07-26","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Round Rock","reasons":["no_title"]},{"id":"1878","name":"Windsor Village","title":"Replace Blower Motor","date":"2025-07-17","tech":"Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1858","name":"Magnolia Scofield","title":"AC Leaking","date":"2025-07-10","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1810","name":"Windsor Village","title":"AC Not Cooling","date":"2025-07-11","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1835","name":"Lin Wang","title":"","date":"2025-07-11","tech":"Braden Naab; Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_title"]},{"id":"1819","name":"Windsor Village","title":"Replace Compressor","date":"2025-07-11","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1850","name":"Magnolia Scofield","title":"AC not working","date":"2025-07-09","tech":"Braden Naab; Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1832","name":"Magnolia Scofield","title":"AC Not Cooling","date":"2025-07-09","tech":"Mike Dodge; Braden Naab; Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1838","name":"Windsor Village","title":"AC not working","date":"2025-07-07","tech":"Braden Naab; Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1848","name":"Windsor Village","title":"AC not working","date":"2025-07-07","tech":"Braden Naab; Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1803","name":"Windsor Village","title":"Warranty Call","date":"2025-06-26","tech":"Braden Naab; Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1802","name":"Amli Eastside","title":"Follow up","date":"2025-06-26","tech":"Braden Naab; Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1784","name":"Windsor Village","title":"AC not working","date":"2025-06-23","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1782","name":"Windsor Village","title":"AC not working","date":"2025-06-23","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1772","name":"Amli Eastside","title":"Replace Compressor","date":"2025-06-23","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1757","name":"Amli Eastside","title":"Compressor Not Working","date":"2025-06-16","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1798","name":"Amli Eastside","title":"Follow up","date":"2025-06-25","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1788","name":"Magnolia Scofield","title":"AC not working","date":"2025-06-24","tech":"Austin Fontaine; Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1800","name":"Magnolia Scofield","title":"Call Back","date":"2025-06-27","tech":"Braden Naab; Austin Fontaine","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1713","name":"Amli Eastside","title":"Compressor Not Working","date":"2025-06-04","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1752","name":"Magnolia Scofield","title":"AC Not Cooling","date":"2025-06-13","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1716","name":"Amli Eastside","title":"Replace Compressor","date":"2025-06-07","tech":"Install","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1723","name":"Windsor Village","title":"Replace Compressor","date":"2025-06-11","tech":"Install","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1714","name":"Windsor Village","title":"AC not working","date":"2025-06-05","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1715","name":"Magnolia Scofield","title":"AC not working","date":"2025-06-05","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1656","name":"Windsor Village","title":"Fan motor runs constantly","date":"2025-06-02","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1653","name":"Windsor Village","title":"Fan motor runs constantly","date":"2025-06-02","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1651","name":"Windsor Village","title":"Common Area Fan Runs Constantly","date":"2025-06-02","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1655","name":"Windsor Village","title":"Fan motor runs constantly","date":"2025-06-02","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1654","name":"Windsor Village","title":"Fan motor runs constantly","date":"2025-06-02","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1652","name":"Windsor Village","title":"Fan motor runs constantly","date":"2025-06-02","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1702","name":"Windsor Village","title":"AC not working","date":"2025-06-02","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1677","name":"Windsor Village","title":"AC not working","date":"2025-05-27","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1648","name":"Magnolia Scofield","title":"AC Not Cooling","date":"2025-05-22","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1663","name":"Magnolia Scofield","title":"AC Not Cooling","date":"2025-05-22","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1626","name":"Sadnam Kazi  DO NOT SERVICE","title":"Condenser making VERY loud noise","date":"2025-05-14","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1625","name":"Sadnam Kazi  DO NOT SERVICE","title":"Condenser making VERY loud noise","date":"2025-05-14","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1614","name":"Magnolia Scofield","title":"Call Back","date":"2025-05-14","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1609","name":"Magnolia Scofield","title":"AC Leaking","date":"2025-05-09","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1606","name":"Magnolia Scofield","title":"AC Not Cooling","date":"2025-05-07","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1565","name":"Magnolia Scofield","title":"Locate leak","date":"2025-05-07","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1601","name":"Windsor Village","title":"AC blowing warm","date":"2025-05-07","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1587","name":"Windsor Village","title":"AC Not Cooling","date":"2025-05-07","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1591","name":"Magnolia Scofield","title":"AC not cooling","date":"2025-05-01","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1555","name":"Magnolia Scofield","title":"AC Not Cooling","date":"2025-04-22","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1593","name":"Windsor Village","title":"Thermostat not working","date":"2025-04-30","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1584","name":"Windsor Village","title":"High Humidity","date":"2025-04-30","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1566","name":"Magnolia Scofield","title":"AC Not Cooling","date":"2025-04-25","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1569","name":"Windsor Village","title":"AC Not Cooling","date":"2025-04-28","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1553","name":"Magnolia Scofield","title":"Warranty Call","date":"2025-04-22","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1547","name":"Magnolia Scofield","title":"AC Not Cooling","date":"2025-04-15","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1522","name":"Magnolia Scofield","title":"AC Leaking","date":"2025-04-15","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1541","name":"Amli Eastside","title":"System Replacement Quote 3-Ton Fur Down 15.2 SEER","date":"2025-04-14","tech":"Braden Naab; Install","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1540","name":"Amli Eastside","title":"System Replacement Quote 3-Ton Fur Down 15.2 SEER","date":"2025-04-11","tech":"Braden Naab; Install","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1539","name":"Amli Eastside","title":"System Replacement Quote 2.5-Ton Fur Down","date":"2025-04-11","tech":"Braden Naab; Install","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1487","name":"Amli Eastside","title":"System Replacement Quote 1.5 Ton FurDown","date":"2025-04-10","tech":"Braden Naab; Install","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1488","name":"Amli Eastside","title":"System Replacement Quote 2Ton FurDown","date":"2025-04-10","tech":"Braden Naab; Install","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1530","name":"Amli Eastside","title":"Walk Units for Replacements","date":"2025-04-08","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1533","name":"Windsor Village","title":"Kitchen exhaust making noise","date":"2025-04-08","tech":"PARTS ON ORDER","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1521","name":"Magnolia Scofield","title":"AC Not Cooling","date":"2025-04-07","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1502","name":"Windsor Village","title":"AC not working","date":"2025-03-25","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1497","name":"Windsor Village","title":"AC Not Cooling","date":"2025-03-21","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1347","name":"Windsor Village","title":"Warranty Call","date":"2024-12-05","tech":"PARTS ON ORDER","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1490","name":"Magnolia Scofield","title":"AC Not Cooling","date":"2025-03-17","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1450","name":"Magnolia Scofield","title":"AC blowing warm","date":"2025-03-05","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1451","name":"Magnolia Scofield","title":"AC not cooling","date":"2025-03-05","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1452","name":"Magnolia Scofield","title":"Noise has returned in AHU","date":"2025-03-05","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1444","name":"Magnolia Scofield","title":"Thermostat not working","date":"2025-02-26","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1448","name":"Magnolia Scofield","title":"","date":"2025-02-28","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_title","no_contact"]},{"id":"1447","name":"Magnolia Scofield","title":"AC Not Cooling-First Floor Turn Two","date":"2025-02-28","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1439","name":"Magnolia Scofield","title":"Therm not working","date":"2025-02-24","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1440","name":"Ironrock Properties","title":"","date":"2025-02-25","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_title"]},{"id":"1426","name":"Magnolia Scofield","title":"Install final heat kit","date":"2025-02-13","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1411","name":"Magnolia Scofield","title":"Install 3 Heat Kits","date":"2025-02-10","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1417","name":"Magnolia Scofield","title":"AC Not Cooling","date":"2025-02-05","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1219","name":"Magnolia Scofield","title":"AC Not Cooling","date":"2024-09-26","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1416","name":"Magnolia Scofield","title":"AC not cooling","date":"2025-02-05","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1409","name":"Austin Custom Living","title":"","date":"2025-01-24","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Weatherford","reasons":["no_title"]},{"id":"1408","name":"Magnolia Scofield","title":"Fan motor runs constantly","date":"2025-01-28","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1407","name":"Windsor Village","title":"Heater Issues","date":"2025-01-27","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1405","name":"Magnolia Scofield","title":"Heater Not Working","date":"2025-01-27","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1404","name":"Magnolia Scofield","title":"AC Leaking","date":"2025-01-27","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1398","name":"Magnolia Scofield","title":"Heater Not Working","date":"2025-01-21","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1204","name":"Magnolia Scofield","title":"Coil Leaking","date":"2024-09-24","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1286","name":"Windsor Village","title":"Warranty Call","date":"2024-10-29","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1371","name":"Magnolia Scofield","title":"Heat/AC not working","date":"2025-01-07","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1380","name":"Cameron Craines","title":"Filter","date":"2025-01-13","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Leander","reasons":["no_contact"]},{"id":"1379","name":"Magnolia Scofield","title":"Compressor Replacement","date":"2025-01-14","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1396","name":"Windsor Village","title":"AC runs constantly","date":"2025-01-17","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1391","name":"Windsor Village","title":"Thermostat not working","date":"2025-01-17","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1390","name":"Windsor Village","title":"Thermostat not working","date":"2025-01-17","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1389","name":"Windsor Village","title":"Thermostat not working","date":"2025-01-17","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1387","name":"Windsor Village","title":"Thermostat not working","date":"2025-01-17","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1386","name":"Windsor Village","title":"Thermostat not working","date":"2025-01-17","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1388","name":"Windsor Village","title":"Thermostat not working","date":"2025-01-17","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1382","name":"Windsor Village","title":"Exhaust Fan","date":"2025-01-16","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1394","name":"Windsor Village","title":"Thermostat not working","date":"2025-01-17","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1393","name":"Windsor Village","title":"Thermostat not working","date":"2025-01-17","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1392","name":"Windsor Village","title":"Therm not working","date":"2025-01-17","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1385","name":"Windsor Village","title":"Kitchen exhaust fan not working","date":"2025-01-16","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1378","name":"Magnolia Scofield","title":"No Heat","date":"2025-01-10","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1359","name":"Magnolia Scofield","title":"Heater Not Working","date":"2024-12-12","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1350","name":"Omar","title":"Heater Not Working","date":"2024-12-06","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1290","name":"Windsor Village","title":"1208","date":"2024-10-31","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1372","name":"Nicole  Goddard","title":"","date":"2025-01-07","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Leander","reasons":["no_title"]},{"id":"1368","name":"Magnolia Scofield","title":"Warranty Call","date":"2025-01-02","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1358","name":"Windsor Village","title":"Warranty Call","date":"2024-12-12","tech":"PARTS ON ORDER","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1335","name":"Windsor Village","title":"Warranty Call","date":"2024-11-26","tech":"PARTS ON ORDER","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1330","name":"Windsor Village","title":"Warranty Call","date":"2024-11-25","tech":"PARTS ON ORDER","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1321","name":"Magnolia Scofield","title":"AC Leaking","date":"2024-11-18","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1287","name":"Magnolia Scofield","title":"Warranty Call","date":"2024-10-30","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1312","name":"Magnolia Scofield","title":"AC has vibration","date":"2024-11-13","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1311","name":"Magnolia Scofield","title":"AC making noise","date":"2024-11-13","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1307","name":"Windsor Village","title":"Kitchen exhaust fan not working","date":"2024-11-14","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1306","name":"Windsor Village","title":"Thermostat not working","date":"2024-11-13","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1305","name":"Windsor Village","title":"Therm","date":"2024-11-13","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1295","name":"Windsor Village","title":"Space feels humid","date":"2024-11-05","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1294","name":"Windsor Village","title":"Kitchen exhaust fan not working","date":"2024-10-31","tech":"PARTS ON ORDER","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1278","name":"Magnolia Scofield","title":"AC not working","date":"2024-10-31","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1277","name":"Magnolia Scofield","title":"AC Whistling","date":"2024-10-28","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1276","name":"Magnolia Scofield","title":"MS Building B L1 Corridor Smell","date":"2024-10-28","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1272","name":"Windsor Village","title":"Dirty Sock Smell","date":"2024-10-23","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1248","name":"Magnolia Scofield","title":"AC Not Cooling","date":"2024-10-16","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1208","name":"Magnolia Scofield","title":"Move Drain Line","date":"2024-09-26","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1241","name":"Magnolia Scofield","title":"Occupied Unit","date":"2024-10-11","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1216","name":"Magnolia Scofield","title":"Replace Compressor","date":"2024-10-10","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1215","name":"Magnolia Scofield","title":"Replace Compressor","date":"2024-10-10","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1226","name":"Magnolia Scofield","title":"AC Not Cooling-OCCUPIED","date":"2024-10-01","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1210","name":"Windsor Village","title":"Occupied Unit","date":"2024-10-01","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1217","name":"Magnolia Scofield","title":"Filter Grille","date":"2024-09-26","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1213","name":"Magnolia Scofield","title":"AC Not Cooling MODEL","date":"2024-09-26","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1205","name":"Magnolia Scofield","title":"Compress Replacement","date":"2024-09-26","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1212","name":"Magnolia Scofield","title":"Ac not cooling. Occupied","date":"2024-09-26","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1189","name":"Magnolia Scofield","title":"AC Not Cooling","date":"2024-09-19","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1188","name":"Magnolia Scofield","title":"Noise in AHU","date":"2024-09-19","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1155","name":"Joshua Kirk","title":"","date":"2024-09-05","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Leander","reasons":["no_title"]},{"id":"1121","name":"Magnolia Scofield","title":"Move condenser","date":"2024-08-16","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1147","name":"Magnolia Scofield","title":"AC not working","date":"2024-08-29","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1078","name":"Derek Connolly","title":"","date":"2024-08-05","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_title"]},{"id":"1067","name":"Magnolia Scofield","title":"Site Work","date":"2024-07-30","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1069","name":"Magnolia Scofield","title":"Site Work","date":"2024-07-31","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1061","name":"Magnolia Scofield","title":"Warranty Call","date":"2024-07-26","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1060","name":"Magnolia Scofield","title":"Site Work","date":"2024-07-25","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"954","name":"Magnolia Scofield","title":"Leasing Units","date":"2024-06-10","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"957","name":"Sadnam Kazi  DO NOT SERVICE","title":"One yr checkup from install","date":"2024-06-11","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"997","name":"Magnolia Scofield","title":"Condensers & Valve","date":"2024-07-02","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1045","name":"Magnolia Scofield","title":"Site Work See MD","date":"2024-07-19","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1029","name":"Windsor Village","title":"","date":"2024-07-09","tech":"PARTS ON ORDER","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_title","no_contact"]},{"id":"1008","name":"Magnolia Scofield","title":"High Condensation","date":"2024-07-02","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"983","name":"Magnolia Scofield","title":"Site Work","date":"2024-06-21","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"1051","name":"Magnolia Scofield","title":"Site Work","date":"2024-07-22","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"981","name":"Magnolia Scofield","title":"Replace Reversing Valve","date":"2024-06-24","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"985","name":"Thiago Silva","title":"No AC","date":"2024-06-24","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Jarrell","reasons":["no_contact"]},{"id":"966","name":"Magnolia Scofield","title":"Site Work See MD","date":"2024-06-14","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"915","name":"Jimmy & Paula Reale","title":"","date":"2024-05-29","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Liberty Hill","reasons":["no_title"]},{"id":"862","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-05-08","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"847","name":"Magnolia Scofield","title":"Site Work See MD","date":"2024-04-30","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"863","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-05-03","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"861","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-05-03","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"857","name":"Magnolia Scofield","title":"Site Work See MD","date":"2024-05-02","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"902","name":"Mark Glenn","title":"","date":"2024-05-15","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Leander","reasons":["no_title"]},{"id":"860","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-05-07","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"859","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-05-06","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"843","name":"Magnolia Scofield","title":"Site Work See MD","date":"2024-04-29","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"845","name":"Magnolia Scofield","title":"Site","date":"2024-04-26","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"806","name":"Jennifer Laubach-Bragg","title":"","date":"2024-04-19","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Liberty Hill","reasons":["no_title"]},{"id":"718","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-03-01","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"725","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-03-05","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"688","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-02-23","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"690","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-02-22","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"687","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-02-22","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"689","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-02-21","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"686","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-02-21","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"685","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-02-20","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"683","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-02-19","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"681","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-02-16","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"680","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-02-15","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"679","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-02-14","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"672","name":"Windsor Village","title":"MF Site Work","date":"2024-02-13","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"669","name":"Windsor Village","title":"MF Site Work","date":"2024-02-12","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"691","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-02-18","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"684","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-02-18","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"676","name":"Windsor Village","title":"MF Site Work","date":"2024-02-07","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"675","name":"Windsor Village","title":"MF Site Work","date":"2024-02-07","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"673","name":"Windsor Village","title":"MF Site Work","date":"2024-02-07","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"716","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-02-28","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"682","name":"Magnolia Scofield","title":"MF Site Work","date":"2024-02-19","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"660","name":"Windsor Village","title":"MF Site Work","date":"2024-01-29","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"654","name":"Windsor Village","title":"MF Site Work","date":"2024-01-25","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"637","name":"Windsor Village","title":"MF Site Work","date":"2024-01-23","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"636","name":"Windsor Village","title":"MF Site Work","date":"2024-01-22","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"632","name":"Windsor Village","title":"MF Site Work","date":"2024-01-19","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"151","name":"Rich Scott","title":"","date":"2023-07-24","tech":"","status":"archived","type":"RECURRING","city":"Leander","reasons":["no_title"]},{"id":"631","name":"Windsor Village","title":"MF Site Work","date":"2024-01-18","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"630","name":"Windsor Village","title":"MF Site Work","date":"2024-01-17","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"602","name":"Windsor Village","title":"MF Site Work","date":"2024-01-09","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"591","name":"Windsor Village","title":"MF Site Work","date":"2024-01-02","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"586","name":"Windsor Village","title":"MF Site Work","date":"2023-12-29","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"585","name":"Windsor Village","title":"MF Site Work","date":"2023-12-28","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"583","name":"Windsor Village","title":"MF Site Work","date":"2023-12-27","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"580","name":"Windsor Village","title":"MF Site Work","date":"2023-12-22","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"579","name":"Windsor Village","title":"MF Site Work","date":"2023-12-21","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"578","name":"Windsor Village","title":"MF Site Work","date":"2023-12-20","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"577","name":"Windsor Village","title":"Continue helping Ed--take direction on site from Ed","date":"2023-12-19","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"487","name":"Gabriel CC Insterests, LLC","title":"","date":"2023-10-25","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Georgetown","reasons":["no_title"]},{"id":"468","name":"Magnolia Scofield","title":"Multi Family","date":"2023-10-12","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"465","name":"Magnolia Scofield","title":"Welding for MD","date":"2023-10-11","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"367","name":"Oak Grove","title":"Replace Evaporator Coil","date":"2023-10-03","tech":"","status":"archived","type":"ONE_OFF","city":"Marble Falls","reasons":["no_contact"]},{"id":"442","name":"Oak Grove","title":"Replace TXV","date":"2023-09-28","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Marble Falls","reasons":["no_contact"]},{"id":"438","name":"Piper Landgrebe","title":"","date":"2023-09-19","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Cedar Park","reasons":["no_title"]},{"id":"393","name":"Sadnam Kazi  DO NOT SERVICE","title":"Thermostat not working","date":"2023-09-05","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"345","name":"Oak Grove","title":"Contactor Needs to be replaced","date":"2023-08-23","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Marble Falls","reasons":["no_contact"]},{"id":"344","name":"Oak Grove","title":"AC not working","date":"2023-08-23","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Marble Falls","reasons":["no_contact"]},{"id":"354","name":"Oak Grove","title":"AC not working","date":"2023-08-23","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Marble Falls","reasons":["no_contact"]},{"id":"292","name":"Oak Grove","title":"Unit is Freezing Up","date":"2023-07-28","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Marble Falls","reasons":["no_contact"]},{"id":"305","name":"Oak Grove","title":"Replace TXV","date":"2023-07-31","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Marble Falls","reasons":["no_contact"]},{"id":"122","name":"Oak Grove","title":"Correct Pitch Problem","date":"2023-06-20","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Marble Falls","reasons":["no_contact"]},{"id":"90","name":"Sherry Dill","title":"","date":"2023-06-06","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Spicewood","reasons":["no_title"]},{"id":"93","name":"Sadnam Kazi  DO NOT SERVICE","title":"AC Not Cooling","date":"2023-06-06","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"79","name":"Sadnam Kazi  DO NOT SERVICE","title":"AC installed last week, not cooling below 74","date":"2023-05-31","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"68","name":"Paul Mallon","title":"","date":"2023-05-26","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Liberty Hill","reasons":["no_title"]},{"id":"52","name":"Sadnam Kazi  DO NOT SERVICE","title":"3.5 Maytag Heat Pump w/ Zoning Install","date":"2023-05-23","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"59","name":"Ian Cooperrider","title":"","date":"2023-05-23","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Leander","reasons":["no_title"]},{"id":"46","name":"Bruce Whiteside","title":"","date":"2023-05-13","tech":"","status":"archived","type":"ONE_OFF","city":"Leander","reasons":["no_title"]},{"id":"42","name":"Gabriel CC Insterests, LLC","title":"","date":"2023-05-12","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Georgetown","reasons":["no_title"]},{"id":"21","name":"Sadnam Kazi  DO NOT SERVICE","title":"Replacement Quote","date":"2023-05-09","tech":"","status":"archived","type":"ONE_OFF","city":"Austin","reasons":["no_contact"]},{"id":"6","name":"David Todd","title":"","date":"2023-04-28","tech":"","status":"archived","type":"ONE_OFF","city":"Round Rock","reasons":["no_title"]},{"id":"4","name":"Chris Ledden","title":"","date":"2023-05-01","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Leander","reasons":["no_title"]},{"id":"3","name":"Oak Grove MF","title":"","date":"2023-04-06","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Marble Falls","reasons":["no_title","no_contact"]},{"id":"38","name":"Oak Grove","title":"","date":"2023-05-11","tech":"Braden Naab","status":"archived","type":"ONE_OFF","city":"Marble Falls","reasons":["no_title","no_contact"]},{"id":"2","name":"Oak Grove MF","title":"Oak Grove MF","date":"2023-04-03","tech":"Mike Dodge","status":"archived","type":"ONE_OFF","city":"Marble Falls","reasons":["no_contact"]}],"cols":["id","name","title","date","tech","status"]},{"key":"customers","label":"Contacts","total":1511,"excluded":88,"rows":[{"name":"(no name)","phone":"","email":"","address":"1900 Simond Avenue, Austin, Texas","reasons":["no_name","no_contact"]},{"name":"(no name)","phone":"","email":"","address":"704 Avenue K, Marble Falls, Texas","reasons":["no_name","no_contact"]},{"name":"3rd Coast Pizza","phone":"","email":"","address":"","reasons":["no_contact"]},{"name":"Cypress Creek Townhomes","phone":"","email":"","address":"1900 Little Elm, Cedar Park, TX","reasons":["no_contact"]},{"name":"Greenview on Barton Creek Greenview-Associa","phone":"","email":"","address":"3600 South Lamar, Austin, TX","reasons":["no_contact"]},{"name":"Chad Radford","phone":"","email":"","address":"10620 North Platt River Dr, Austin, TX","reasons":["no_contact"]},{"name":"9525 at the Loop-ASSOCIA","phone":"","email":"","address":"9525 Capital of Texas Hwy, Austin, TX","reasons":["no_contact"]},{"name":"Shadow Glen-Associa","phone":"","email":"","address":"11525 Shadow Glen Trce, Manor, TX","reasons":["no_contact"]},{"name":"The Park at the Village","phone":"","email":"","address":"2800 Joe DiMaggio Blvd, Round Rock, TX","reasons":["no_contact"]},{"name":"Village on Congress","phone":"","email":"","address":"6000 S Congress, Austin, TX","reasons":["no_contact"]},{"name":"Denali Pass-Associa","phone":"","email":"","address":"301 Denali Pass, Cedar Park, TX","reasons":["no_contact"]},{"name":"Silverado-Associa","phone":"","email":"","address":"1840 Burton Rd, Austin, TX","reasons":["no_contact"]},{"name":"Windtree","phone":"","email":"","address":"106 East 30th Street, Austin, TX","reasons":["no_contact"]},{"name":"Parmer Village Townhomes","phone":"","email":"","address":"13400 Briarwick Drive, Austin, TX","reasons":["no_contact"]},{"name":"Ian Meyers","phone":"","email":"","address":"1400 Encino, Leander, TX","reasons":["no_contact"]},{"name":"Liz Avian","phone":"","email":"","address":"604 North Bluff Drive, Austin, TX","reasons":["no_contact"]},{"name":"Amli South Shores","phone":"","email":"","address":"1620 E Riverside Dr, Austin, TX","reasons":["no_contact"]},{"name":"Magnolia Scofield","phone":"","email":"","address":"3100 Scofield Ridge Parkway, Austin, Texas","reasons":["no_contact"]},{"name":"Golden Field Enterprises","phone":"","email":"","address":"PO Box 993, Leander, TX","reasons":["no_contact"]},{"name":"Balch Spring","phone":"","email":"","address":"","reasons":["no_contact"]},{"name":"Balcones","phone":"","email":"","address":"","reasons":["no_name","no_contact"]},{"name":"Brian Mead","phone":"","email":"","address":"510 S. Seguin Street, New Braunfels, TX","reasons":["no_contact"]},{"name":"Brian Mead","phone":"","email":"","address":"4507 Sansone Drive, Round Rock, TX","reasons":["no_contact"]},{"name":"Bridges at Cameron","phone":"","email":"","address":"9201 Cameron Rd, Austin, TX","reasons":["no_contact"]},{"name":"Patsy Walker","phone":"","email":"","address":"500 Grand Avenue Parkway, Pflugerville, Texas","reasons":["no_contact"]},{"name":"(no name)","phone":"","email":"","address":"","reasons":["no_name","no_contact"]},{"name":"Eddy Castanon","phone":"","email":"","address":"702 Champions Point, Pflugerville, TX","reasons":["no_contact"]},{"name":"Darcy Schiller","phone":"","email":"","address":"18413 Lakeland Dr, Lago Vista, TX","reasons":["no_contact"]},{"name":"Michael Dodge","phone":"+15127978629","email":"mldservices.llc@gmail.com","address":"1636 Bovina Dr, Leander, TX","reasons":["other"]},{"name":"Trisha Myers","phone":"+15712131778","email":"mldservices.llc@gmail.com","address":"1620 Dusty Bend, Leander, Texas","reasons":["other"]},{"name":"(no name)","phone":"","email":"","address":"","reasons":["no_name","no_contact"]},{"name":"(no name)","phone":"+15127487880","email":"","address":"1008 South Rock Street, Georgetown, TX","reasons":["no_name"]},{"name":"Al Gentry","phone":"","email":"","address":"24800 Sheep Hollow Trl, Leander, TX","reasons":["no_contact"]},{"name":"Christopher & Veronica Vowel","phone":"","email":"","address":"1617 Bovina Drive, Leander, TX","reasons":["no_contact"]},{"name":"Seidlets C/O Drain Gray","phone":"","email":"","address":"211 East Hermosa Drive, San Antonio, TX","reasons":["no_contact"]},{"name":"Dallas Gregory","phone":"+15127967638","email":"","address":"3406 Spumanti Lane, Leander, TX","reasons":["other"]},{"name":"Branden Test","phone":"+15127967638","email":"","address":"123 Lucky Dog Ln, Leander, TX","reasons":["other"]},{"name":"(no name)","phone":"","email":"","address":"12433 Dessau Rd, Austin, TX","reasons":["no_name","no_contact"]},{"name":"Carlos Hernandez","phone":"","email":"","address":"8717 Panadero Dr, Austin, Tx","reasons":["no_contact"]},{"name":"Mike Keirnan","phone":"","email":"","address":"4201 Brasada Ln, Marble Falls, TX","reasons":["no_contact"]},{"name":"Chris Kendall","phone":"","email":"","address":"619 Kingfisher, Leander, TX","reasons":["no_contact"]},{"name":"Kevin Beaty","phone":"","email":"","address":"Asturius Drive, Leander, TX","reasons":["no_contact"]},{"name":"Faraz Kureshi","phone":"","email":"","address":"407 Clear Shadow, Cedar Park, TX","reasons":["no_contact"]},{"name":"Richard Tuttle","phone":"","email":"","address":"20900 Little Lane, Lago Vista, TX","reasons":["no_contact"]},{"name":"Leatherwood","phone":"","email":"rgarrett@fhcci.com","address":"105 Ellen May Road, Yoakum, TX","reasons":["no_name"]},{"name":"Eric Wernickie","phone":"","email":"","address":"14900 Thatcher Drive, Austin, Texas","reasons":["no_contact"]},{"name":"David McKenzie","phone":"","email":"","address":"1004 Brushy Bend Dr, Round Rock, TX","reasons":["no_contact"]},{"name":"Lennox Training","phone":"","email":"","address":"","reasons":["no_contact"]},{"name":"LG Training","phone":"","email":"","address":"","reasons":["no_contact"]},{"name":"Madison Dallen","phone":"","email":"","address":"144 Earl Keen Street, Andice, TX","reasons":["no_contact"]},{"name":"Paul Mayer","phone":"","email":"","address":"1561 Sam Bass Rd, Round Rock, TX","reasons":["no_contact"]},{"name":"Mead","phone":"","email":"","address":"","reasons":["no_name","no_contact"]},{"name":"Phyllis Meeks","phone":"","email":"","address":"124 Magpie Goose Lane, Leander, TX","reasons":["no_contact"]},{"name":"(no name)","phone":"","email":"","address":"","reasons":["no_name","no_contact"]},{"name":"Jacob Mitchell","phone":"","email":"","address":"1407 Faustino Cv, Leander, TX","reasons":["no_contact"]},{"name":"Paulett Newton","phone":"","email":"","address":"828 Hillrose Drive, Leander, Texas","reasons":["no_contact"]},{"name":"Randy O'Neil","phone":"","email":"","address":"13309 Misty Bend, Leander, TX","reasons":["no_contact"]},{"name":"Oak Grove","phone":"","email":"","address":"1100 Broadway, Marble Falls, Texas","reasons":["no_contact"]},{"name":"(no name)","phone":"","email":"","address":"","reasons":["no_name","no_contact"]},{"name":"Brent Parsons","phone":"","email":"","address":"117 High Gabriel, Leander, TX","reasons":["no_contact"]},{"name":"Tina & Charlie Referral","phone":"","email":"","address":"1203 Century Lane, Cedar Park, TX","reasons":["no_contact"]},{"name":"RMI Training Center","phone":"","email":"","address":"1100 Kramer Ln, Austin, TX","reasons":["no_contact"]},{"name":"Robert Madden","phone":"","email":"","address":"1100 Kramer Ln, Austin, TX","reasons":["no_contact"]},{"name":"(no name)","phone":"","email":"","address":"3725 Lakeline Blvd #A2, Leander, TX","reasons":["no_name","no_contact"]},{"name":"Salado Tiny Home","phone":"","email":"","address":"","reasons":["no_contact"]},{"name":"Saltgrass Landing","phone":"","email":"","address":"","reasons":["no_contact"]},{"name":"Victor Sanchez","phone":"","email":"","address":"301 Hernandez Loop, Leander, TX","reasons":["no_contact"]},{"name":"(no name)","phone":"","email":"","address":"","reasons":["no_name","no_contact"]},{"name":"(no name)","phone":"","email":"","address":"","reasons":["no_name","no_contact"]},{"name":"Test Test","phone":"","email":"","address":"1309 Leander Dr Ste 503, Leander, Texas","reasons":["no_contact"]},{"name":"Bobby Test","phone":"+15125551212","email":"bobby@gmail.com","address":"1309 Leander, Leander, TX","reasons":["other"]},{"name":"Randell Test","phone":"+15124186607","email":"","address":"1234 High Tech Lane, Leander, TX","reasons":["other"]},{"name":"Vince Test","phone":"+15124186632","email":"","address":"1234 Bad Ass Lane, Leander, TX","reasons":["other"]},{"name":"Texas Mutual Ins","phone":"","email":"","address":"","reasons":["no_contact"]},{"name":"Todd Rauch","phone":"","email":"","address":"1306 Mason Creek, Leander, TX","reasons":["no_contact"]},{"name":"Juan Tores","phone":"","email":"","address":"109 8th Street, Bertram, TX","reasons":["no_contact"]},{"name":"Mr Vidaleas","phone":"","email":"","address":"111 Red Oak Court, Georgetown, TX","reasons":["no_contact"]},{"name":"Sadnam Kazi  DO NOT SERVICE","phone":"","email":"","address":"9407 Pioneer Forest Drive, Austin, Texas","reasons":["no_contact"]},{"name":"David Taylor","phone":"","email":"","address":"2501 Tejas Trail, Leander, Texas","reasons":["no_contact"]},{"name":"(no name)","phone":"","email":"","address":"210 Nottingham Lane, Salado, Texas","reasons":["no_name","no_contact"]},{"name":"(no name)","phone":"","email":"","address":"5900 Westminster Drive, Austin, Texas","reasons":["no_name","no_contact"]},{"name":"Thiago Silva","phone":"","email":"","address":"213 Blue Agate Court, Jarrell, Texas","reasons":["no_contact"]},{"name":"Omar","phone":"","email":"","address":"6112 Pizer Street, Austin, Texas","reasons":["no_contact"]},{"name":"Cameron Craines","phone":"","email":"","address":"1309 Leander Drive, Leander, Texas","reasons":["no_contact"]},{"name":"Amli Eastside","phone":"","email":"","address":"1000 San Marcos Street, Austin, Texas","reasons":["no_contact"]},{"name":"Vijay Hehea","phone":"","email":"","address":"5323 Levander Loop, Austin, Texas","reasons":["no_contact"]},{"name":"Johnson","phone":"","email":"","address":"235 Peninsula Drive, Burnet, Texas","reasons":["no_name","no_contact"]},{"name":"MLD Services","phone":"","email":"","address":"1309 Leander Drive, Leander, Texas","reasons":["no_contact"]}],"cols":["name","phone","email","address"]},{"key":"invoices","label":"Invoices","total":4239,"excluded":73,"rows":[{"id":"23111","job_id":"","status":"paid","total":0,"issue_date":"2025-07-31","item":"Warranty Call-No Charge","notes":"For Services Rendered","reasons":["zero_dollar","no_job","no_contact"]},{"id":"22086","job_id":"","status":"paid","total":7500,"issue_date":"2025-01-13","item":"Filter Fetch","notes":"For Services Rendered","reasons":["no_job","no_contact"]},{"id":"21798","job_id":"","status":"paid","total":0,"issue_date":"2024-09-30","item":"02 Site Work","notes":"For Services Rendered","reasons":["zero_dollar","no_job","no_contact"]},{"id":"23950","job_id":"2446","status":"paid","total":0,"issue_date":"2026-07-30","item":"MSC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"24462","job_id":"2703","status":"paid","total":0,"issue_date":"2026-07-30","item":"Heat Kit","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"24461","job_id":"2484","status":"paid","total":0,"issue_date":"2026-07-30","item":"TXV (Thermostatic Expansion Valve) Replacement","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"24460","job_id":"2467","status":"paid","total":0,"issue_date":"2026-07-30","item":"Executive Membership with Services","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"24458","job_id":"2441","status":"paid","total":0,"issue_date":"2026-07-30","item":"COL-180","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"24423","job_id":"2319","status":"paid","total":0,"issue_date":"2026-07-29","item":"IAQ-110","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"24422","job_id":"2354","status":"paid","total":0,"issue_date":"2026-07-29","item":"HVAC Design and Installation","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"24186","job_id":"2126","status":"paid","total":0,"issue_date":"2026-07-22","item":"PCP (MB)","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"24372","job_id":"2595","status":"paid","total":588962,"issue_date":"2026-07-21","item":"Mini Split Diagnosis","notes":"For Services Rendered","reasons":["other"]},{"id":"23737","job_id":"2302","status":"paid","total":0,"issue_date":"2026-07-21","item":"Coil Temp Sensor","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"24366","job_id":"1853","status":"past_due","total":0,"issue_date":"2026-07-21","item":"ECP (S) 1","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"24343","job_id":"2635","status":"paid","total":0,"issue_date":"2026-07-07","item":"CCP (MB)","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"24256","job_id":"2400","status":"paid","total":0,"issue_date":"2026-06-26","item":"15 HVAC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"24209","job_id":"2627","status":"paid","total":0,"issue_date":"2026-06-16","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"24201","job_id":"2254","status":"paid","total":0,"issue_date":"2026-06-10","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"24199","job_id":"2598","status":"paid","total":0,"issue_date":"2026-06-10","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"24096","job_id":"2522","status":"paid","total":0,"issue_date":"2026-05-14","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"24093","job_id":"2522","status":"paid","total":0,"issue_date":"2026-05-12","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23887","job_id":"2424","status":"paid","total":0,"issue_date":"2026-03-30","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23884","job_id":"2428","status":"paid","total":0,"issue_date":"2026-03-28","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23883","job_id":"2438","status":"paid","total":0,"issue_date":"2026-03-28","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23882","job_id":"2414","status":"paid","total":0,"issue_date":"2026-03-28","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23881","job_id":"2415","status":"paid","total":0,"issue_date":"2026-03-28","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23871","job_id":"2171","status":"paid","total":0,"issue_date":"2026-03-23","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23870","job_id":"2218","status":"paid","total":0,"issue_date":"2026-03-23","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23639","job_id":"1536","status":"paid","total":70000,"issue_date":"2026-01-20","item":"Service Agreement Commercial","notes":"For Services Rendered","reasons":["other"]},{"id":"23829","job_id":"2389","status":"paid","total":0,"issue_date":"2026-03-02","item":"CON-100","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23761","job_id":"2366","status":"paid","total":662500,"issue_date":"2026-02-18","item":"HVAC Design and Installation","notes":"For Services Rendered","reasons":["other"]},{"id":"23595","job_id":"","status":"paid","total":0,"issue_date":"2025-12-31","item":"ECP (MB)","notes":"For Services Rendered","reasons":["zero_dollar","no_job"]},{"id":"23500","job_id":"","status":"paid","total":0,"issue_date":"2025-11-30","item":"ECP (MB)","notes":"For Services Rendered","reasons":["zero_dollar","no_job"]},{"id":"23396","job_id":"","status":"paid","total":0,"issue_date":"2025-10-31","item":"ECP (MB)","notes":"For Services Rendered","reasons":["zero_dollar","no_job"]},{"id":"23311","job_id":"453","status":"paid","total":0,"issue_date":"2025-10-02","item":"CCP (S) 4","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23530","job_id":"452","status":"paid","total":0,"issue_date":"2025-12-01","item":"PCP (MB)","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23541","job_id":"2216","status":"paid","total":0,"issue_date":"2025-12-01","item":"15 HVAC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23327","job_id":"2156","status":"paid","total":0,"issue_date":"2025-10-15","item":"15 HVAC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23180","job_id":"2035","status":"paid","total":0,"issue_date":"2025-09-05","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23178","job_id":"2033","status":"paid","total":0,"issue_date":"2025-09-05","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23177","job_id":"2030","status":"paid","total":0,"issue_date":"2025-08-29","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23172","job_id":"2022","status":"paid","total":0,"issue_date":"2025-08-29","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23170","job_id":"2019","status":"paid","total":0,"issue_date":"2025-08-26","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23167","job_id":"2015","status":"paid","total":0,"issue_date":"2025-08-26","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23165","job_id":"2008","status":"paid","total":0,"issue_date":"2025-08-22","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23155","job_id":"1988","status":"paid","total":0,"issue_date":"2025-08-27","item":"HVAC-DIAG-100","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23150","job_id":"1975","status":"paid","total":0,"issue_date":"2025-08-27","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23149","job_id":"1973","status":"paid","total":0,"issue_date":"2025-08-13","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23146","job_id":"1969","status":"paid","total":0,"issue_date":"2025-08-14","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23144","job_id":"1966","status":"paid","total":0,"issue_date":"2025-08-20","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23139","job_id":"1956","status":"paid","total":0,"issue_date":"2025-09-05","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23136","job_id":"1951","status":"paid","total":0,"issue_date":"2025-08-07","item":"15 HVAC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23127","job_id":"1940","status":"paid","total":0,"issue_date":"2025-08-04","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23124","job_id":"1929","status":"paid","total":0,"issue_date":"2025-09-05","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23123","job_id":"1929","status":"past_due","total":0,"issue_date":"2025-07-30","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23119","job_id":"1923","status":"paid","total":0,"issue_date":"2025-07-30","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23116","job_id":"1918","status":"paid","total":0,"issue_date":"2025-07-30","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"23096","job_id":"1866","status":"paid","total":0,"issue_date":"2025-09-05","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"22906","job_id":"1536","status":"paid","total":70000,"issue_date":"2025-07-23","item":"Service Agreement Commercial","notes":"For Services Rendered","reasons":["other"]},{"id":"22897","job_id":"1853","status":"paid","total":0,"issue_date":"2025-07-23","item":"ECP (S) 1","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"22866","job_id":"1857","status":"paid","total":0,"issue_date":"2025-07-14","item":"Supply Plenum ","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"22781","job_id":"1770","status":"paid","total":0,"issue_date":"2025-06-27","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"22714","job_id":"1744","status":"paid","total":0,"issue_date":"2025-06-13","item":"410A Puron","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"22448","job_id":"1501","status":"paid","total":0,"issue_date":"2025-04-21","item":"Service Agreement Commercial","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"22369","job_id":"1506","status":"paid","total":157500,"issue_date":"2025-03-28","item":"CRP-110","notes":"For Services Rendered","reasons":["other"]},{"id":"22160","job_id":"1314","status":"paid","total":0,"issue_date":"2025-01-19","item":"15 HVAC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"21849","job_id":"1221","status":"paid","total":780000,"issue_date":"2024-10-02","item":"HCE York 2 Ton Two Stage Performance Gas System ","notes":"For Services Rendered","reasons":["other"]},{"id":"21663","job_id":"1100","status":"paid","total":0,"issue_date":"2024-08-13","item":"CRP-110","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"21659","job_id":"1073","status":"paid","total":0,"issue_date":"2024-08-12","item":"MSC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"21641","job_id":"1082","status":"paid","total":0,"issue_date":"2024-08-02","item":"CON-100","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"21369","job_id":"865","status":"paid","total":0,"issue_date":"2024-05-21","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"20507","job_id":"124","status":"paid","total":0,"issue_date":"2023-07-24","item":"HVAC Design and Installation","notes":"For Services Rendered","reasons":["zero_dollar"]},{"id":"14","job_id":"","status":"paid","total":59900,"issue_date":"2023-05-12","item":"TRIP & DIAGNOSTIC","notes":"For Services Rendered","reasons":["no_job"]}],"cols":["id","job_id","status","total","issue_date","item"]},{"key":"estimates","label":"Estimates","total":643,"excluded":1,"rows":[{"name":"System Replacement Quote","customer":"Amli South Shores","status":"archived","total":0,"created":"2025-10-30","reasons":["no_job","no_contact"]}],"cols":["name","customer","status","total","created"]},{"key":"members","label":"Memberships","total":104,"excluded":0,"rows":[],"cols":[]},{"key":"pricebook_materials","label":"Pricebook — Materials","total":61,"excluded":0,"rows":[],"cols":[]},{"key":"pricebook_services","label":"Pricebook — Services","total":4601,"excluded":0,"rows":[],"cols":[]},{"key":"attachments","label":"Job Attachments","total":12893,"excluded":59,"cols":["job_id","file"],"rows":[{"job_id":"991","file":"Moore_RGF_Warranty_Registration_2.3..pdf","reasons":["invalid_s3_key"]},{"job_id":"502","file":"Moore_RGF_Warranty_Registration_2.3..pdf","reasons":["invalid_s3_key"]},{"job_id":"1317","file":"Moore_RGF_Warranty_Registration_2.3..pdf","reasons":["invalid_s3_key"]},{"job_id":"1973","file":"Moore_RGF_Warranty_Registration_2.3..pdf","reasons":["invalid_s3_key"]},{"job_id":"1974","file":"Moore_RGF_Warranty_Registration_2.3..pdf","reasons":["invalid_s3_key"]},{"job_id":"1011","file":"Moore_RGF_Warranty_Registration_2.3..pdf","reasons":["invalid_s3_key"]},{"job_id":"2303","file":"Moore_RGF_Warranty_Registration_2.3..pdf","reasons":["invalid_s3_key"]},{"job_id":"1012","file":"Moore_RGF_Warranty_Registration_2.3..pdf","reasons":["invalid_s3_key"]},{"job_id":"2245","file":"IMG_9537.mov","reasons":["too_large"]},{"job_id":"1986","file":"IMG_5018.mov","reasons":["too_large"]},{"job_id":"1442","file":"IMG_2218.mov","reasons":["too_large"]},{"job_id":"1074","file":"IMG_0084.mov","reasons":["too_large"]},{"job_id":"699","file":"IMG_7674.mov","reasons":["too_large"]},{"job_id":"1557","file":"IMG_1758.mov","reasons":["too_large"]},{"job_id":"1557","file":"IMG_1759.mov","reasons":["too_large"]},{"job_id":"2609","file":"IMG_4033.mov","reasons":["too_large"]},{"job_id":"557","file":"Rate--Optimus_Approval.pdf","reasons":["upload_failed"]},{"job_id":"1944","file":"58A44835-7AB7-4215-ABE8-8EE27DB159EA.jpg","reasons":["upload_failed"]},{"job_id":"744","file":"Rate--Optimus_Approval.pdf","reasons":["upload_failed"]},{"job_id":"728","file":"Rate--Optimus_Approval.pdf","reasons":["upload_failed"]},{"job_id":"727","file":"Rate--Optimus_Approval.pdf","reasons":["upload_failed"]},{"job_id":"2732","file":"1_18_11’+9’+17’+20’‎_=_57’.jpg","reasons":["invalid_multipart"]},{"job_id":"354","file":"3C56020D-4A64-431F-99C4-76EDFAAE4D1D.jpg","reasons":["no_matching_job"]},{"job_id":"93","file":"BC90E175-7E2E-46BD-86FE-2866D9507B70.jpg","reasons":["no_matching_job"]},{"job_id":"93","file":"E0EB7B23-0C2E-4411-BE51-BCDE87DB9EDC.jpg","reasons":["no_matching_job"]},{"job_id":"93","file":"DECE6414-7814-4B95-A2AF-39884DA01C63.png","reasons":["no_matching_job"]},{"job_id":"93","file":"77DC007E-3C2A-4FB7-982D-00A2975DA622.jpg","reasons":["no_matching_job"]},{"job_id":"93","file":"F24B9893-A024-47AA-A029-A5E35B67D9E1.png","reasons":["no_matching_job"]},{"job_id":"93","file":"298A99CA-6DF0-451C-AA13-C50B24BBD778.jpg","reasons":["no_matching_job"]},{"job_id":"93","file":"1D8A641E-2D0D-4B51-A50F-51A7B7978138.jpg","reasons":["no_matching_job"]},{"job_id":"292","file":"D4B59697-0DE2-444E-BF6E-360BB4FA31C1.jpg","reasons":["no_matching_job"]},{"job_id":"292","file":"C2668E3D-6130-4751-B1AC-28BC74EF7661.jpg","reasons":["no_matching_job"]},{"job_id":"2749","file":"IMG_0748.jpg","reasons":["no_matching_job"]},{"job_id":"2749","file":"IMG_0747.jpg","reasons":["no_matching_job"]},{"job_id":"2749","file":"IMG_0752.jpg","reasons":["no_matching_job"]},{"job_id":"2749","file":"IMG_0751.jpg","reasons":["no_matching_job"]},{"job_id":"2749","file":"IMG_0745.jpg","reasons":["no_matching_job"]},{"job_id":"2749","file":"IMG_0754.jpg","reasons":["no_matching_job"]},{"job_id":"2749","file":"IMG_0756.jpg","reasons":["no_matching_job"]},{"job_id":"2749","file":"IMG_0757.jpg","reasons":["no_matching_job"]},{"job_id":"957","file":"AFEA46B2-7DD3-4F78-B9F0-646EA70AC23F.png","reasons":["no_matching_job"]},{"job_id":"957","file":"B038CED0-4E9F-4DF6-93C1-0FF84A045F18.jpg","reasons":["no_matching_job"]},{"job_id":"957","file":"61B98FB4-7060-4A03-B124-EDCF7858D1E8.png","reasons":["no_matching_job"]},{"job_id":"305","file":"3520C7D6-4EDC-440C-99E2-7A0F9A1D8336.jpg","reasons":["no_matching_job"]},{"job_id":"305","file":"A0717257-8E24-4043-9A51-5C6E6FE92560.jpg","reasons":["no_matching_job"]},{"job_id":"442","file":"F89E0578-4B4C-468A-A89A-FBD751025F65.jpg","reasons":["no_matching_job"]},{"job_id":"442","file":"876C3BA7-04B3-4A1A-802E-3165E7AD1746.jpg","reasons":["no_matching_job"]},{"job_id":"442","file":"D15B1765-8ABF-4CF1-94C6-F568F0F61DAA.jpg","reasons":["no_matching_job"]},{"job_id":"442","file":"7379FDC9-1B26-46F7-B6CC-1479B727292B.jpg","reasons":["no_matching_job"]},{"job_id":"79","file":"32B4A11F-3A62-417D-8363-2D42A681E11E.png","reasons":["no_matching_job"]},{"job_id":"79","file":"E961BC21-6ADF-4FA9-979B-20C088770B79.png","reasons":["no_matching_job"]},{"job_id":"79","file":"D8FD3AC9-F136-4CE7-A00C-6F38B7B44C3A.png","reasons":["no_matching_job"]},{"job_id":"79","file":"2EEB653D-DE4B-4B45-84D4-B74469418378.jpg","reasons":["no_matching_job"]},{"job_id":"79","file":"6650B417-6D56-46E2-BD69-54900A424F24.jpg","reasons":["no_matching_job"]},{"job_id":"345","file":"5B079B06-D2C3-4A8C-8FB0-B6C566F15863.jpg","reasons":["no_matching_job"]},{"job_id":"344","file":"F5162E53-0364-4533-9D66-CDBAC799F9FD.jpg","reasons":["no_matching_job"]},{"job_id":"344","file":"DB722728-CBCA-496A-804E-724FD5BD11E5.png","reasons":["no_matching_job"]},{"job_id":"344","file":"IMG_5977.mov","reasons":["no_matching_job"]},{"job_id":"344","file":"58BBDCE9-B7B3-4791-AD47-CC1921411A1A.jpg","reasons":["no_matching_job"]}]}]}</script>
+<script>
+(function () {
+  const data = JSON.parse(document.getElementById('data-json').textContent);
+  const REASONS = data.reasonLabels;
+  const GROUP_COLOR = {
+    missing_field: 'var(--accent)',
+    zero_dollar: 'var(--ink-faint)',
+    review: 'var(--crit)',
+    upload_error: 'var(--warn)',
+  };
+
+  document.getElementById('acct-name').textContent = data.account;
+  document.getElementById('acct-sub').textContent = data.vertical + ' — non-importable records held out of the Job History / Contacts / Invoices / Estimates / Attachments upload';
+  document.getElementById('foot-acct').textContent = data.account;
+
+  const meta = document.getElementById('masthead-meta');
+  const totalExcluded = data.entities.reduce((s, e) => s + e.excluded, 0);
+  const totalScanned = data.entities.reduce((s, e) => s + e.total, 0);
+  [
+    ['Generated', data.generated],
+    ['Categories', data.entities.length],
+    ['Rows scanned', totalScanned.toLocaleString()],
+    ['Rows excluded', totalExcluded.toLocaleString()],
+  ].forEach(([k, v]) => {
+    const row = document.createElement('div');
+    row.className = 'mrow';
+    row.innerHTML = `<span>${k}</span><span>${v}</span>`;
+    meta.appendChild(row);
+  });
+
+  document.getElementById('excl-total').textContent = totalExcluded.toLocaleString();
+
+  const tileGrid = document.getElementById('tile-grid');
+  const entitiesEl = document.getElementById('entities');
+
+  function fmtMoney(cents) {
+    const v = (cents || 0) / 100;
+    return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  data.entities.forEach((ent, idx) => {
+    const clean = ent.excluded === 0;
+    const pct = ent.total ? Math.round((ent.excluded / ent.total) * 1000) / 10 : 0;
+
+    // tile
+    const tile = document.createElement('button');
+    tile.className = 'tile';
+    tile.dataset.clean = clean;
+    tile.addEventListener('click', () => {
+      document.getElementById('entity-' + ent.key).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    tile.innerHTML = `
+      <div class="tile-label">${ent.label}</div>
+      <div class="tile-count">${ent.excluded.toLocaleString()}</div>
+      <div class="tile-frac">of ${ent.total.toLocaleString()} &middot; ${clean ? 'clean' : pct + '%'}</div>
+      <div class="tile-bar"><span style="width:${Math.min(pct, 100)}%"></span></div>
+    `;
+    tileGrid.appendChild(tile);
+
+    // section
+    const section = document.createElement('section');
+    section.className = 'entity';
+    section.id = 'entity-' + ent.key;
+
+    const head = document.createElement('div');
+    head.className = 'entity-head';
+    head.innerHTML = `
+      <h2 class="entity-title"><span class="idx">${String(idx + 1).padStart(2, '0')}</span>${ent.label}</h2>
+      <span class="total-pill"><b>${ent.excluded.toLocaleString()}</b> excluded of ${ent.total.toLocaleString()} scanned</span>
+    `;
+    section.appendChild(head);
+
+    if (clean) {
+      const cleanBox = document.createElement('div');
+      cleanBox.className = 'entity-clean';
+      cleanBox.innerHTML = `<span class="dot"></span> Every scanned row matched cleanly &mdash; nothing held back. <span class="n">${ent.total.toLocaleString()} / ${ent.total.toLocaleString()}</span>`;
+      section.appendChild(cleanBox);
+      entitiesEl.appendChild(section);
+      return;
+    }
+
+    // reason tally
+    const tally = {};
+    ent.rows.forEach(r => r.reasons.forEach(rc => { tally[rc] = (tally[rc] || 0) + 1; }));
+    const reasonKeys = Object.keys(tally).sort((a, b) => tally[b] - tally[a]);
+
+    const bar = document.createElement('div');
+    bar.className = 'reasonbar';
+    reasonKeys.forEach(rc => {
+      const seg = document.createElement('span');
+      const w = (tally[rc] / ent.rows.length) * 100;
+      seg.style.width = w + '%';
+      seg.style.background = GROUP_COLOR[REASONS[rc].group];
+      bar.appendChild(seg);
+    });
+    section.appendChild(bar);
+
+    const legend = document.createElement('div');
+    legend.className = 'legend';
+    reasonKeys.forEach(rc => {
+      const item = document.createElement('div');
+      item.className = 'legend-item';
+      item.innerHTML = `<span class="legend-swatch" style="background:${GROUP_COLOR[REASONS[rc].group]}"></span>${REASONS[rc].label} <b>${tally[rc]}</b>`;
+      legend.appendChild(item);
+    });
+    section.appendChild(legend);
+
+    // table
+    const wrap = document.createElement('div');
+    wrap.className = 'tablewrap';
+    const table = document.createElement('table');
+
+    const COL_DEFS = {
+      id: { h: 'Job #', mono: true },
+      job_id: { h: 'Job #', mono: true },
+      name: { h: 'Customer' },
+      customer: { h: 'Customer' },
+      title: { h: 'Job Title', wrap: true },
+      date: { h: 'Date', mono: true },
+      created: { h: 'Created', mono: true },
+      issue_date: { h: 'Issued', mono: true },
+      tech: { h: 'Technician', dim: true },
+      status: { h: 'Status', dim: true },
+      type: { h: 'Type', dim: true },
+      city: { h: 'City', dim: true },
+      phone: { h: 'Phone', mono: true },
+      email: { h: 'Email' },
+      address: { h: 'Address', wrap: true, dim: true },
+      total: { h: 'Total', mono: true, money: true },
+      item: { h: 'Line Item', wrap: true, dim: true },
+      file: { h: 'File', wrap: true },
+    };
+
+    const thead = document.createElement('thead');
+    const trh = document.createElement('tr');
+    ent.cols.forEach(c => {
+      const th = document.createElement('th');
+      th.textContent = COL_DEFS[c].h;
+      if (COL_DEFS[c].mono) th.className = 'mono';
+      trh.appendChild(th);
+    });
+    const thReason = document.createElement('th');
+    thReason.textContent = 'Why excluded';
+    trh.appendChild(thReason);
+    thead.appendChild(trh);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    ent.rows.forEach(r => {
+      const tr = document.createElement('tr');
+      ent.cols.forEach(c => {
+        const td = document.createElement('td');
+        const def = COL_DEFS[c];
+        let val = r[c];
+        if (def.money) val = fmtMoney(val);
+        td.textContent = (val === undefined || val === null || val === '') ? '—' : val;
+        let cls = [];
+        if (def.mono) cls.push('mono');
+        if (def.dim) cls.push('dim');
+        if (def.wrap) cls.push('wrap');
+        if (cls.length) td.className = cls.join(' ');
+        tr.appendChild(td);
+      });
+      const tdReason = document.createElement('td');
+      tdReason.className = 'wrap';
+      r.reasons.forEach(rc => {
+        const chip = document.createElement('span');
+        chip.className = 'chip chip-' + REASONS[rc].group;
+        chip.textContent = REASONS[rc].label;
+        tdReason.appendChild(chip);
+      });
+      tr.appendChild(tdReason);
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    section.appendChild(wrap);
+
+    const count = document.createElement('div');
+    count.className = 'rowcount';
+    count.textContent = `Showing all ${ent.rows.length.toLocaleString()} rows`;
+    section.appendChild(count);
+
+    entitiesEl.appendChild(section);
+  });
+})();
+</script>

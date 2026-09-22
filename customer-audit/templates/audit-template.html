@@ -1,0 +1,939 @@
+<!--
+  CUSTOMER AUDIT — ARTIFACT TEMPLATE
+  Copy this file whole. It is a fully worked example (Warner Super Service) —
+  a heavy, complicated account. A clean account's audit is much shorter.
+
+  FIXED (never change):
+   - the entire <style> block, byte-for-byte
+   - every element, class name, and section id
+   - the <h2> headings, the "NN — ..." eyebrow labels, the <nav class="toc">
+   - favicon 🛰️, title "<Company> — Podium Account Audit"
+
+  FLEXIBLE (see Phase E in SKILL.md):
+   - lead every section with what actually matters for THIS account;
+     flag account-specific issues wherever they land hardest
+   - keep thin sections thin — do not pad to match this example's volume;
+     a section with nothing real collapses to one honest line
+   - #sold cards and "tl pin" rows scale to the real number of audited
+     sales calls (possibly one, possibly none); their counts must agree
+   - severity / kind / pin tags reflect reality, not habit
+
+  Delete this comment in your copy.
+-->
+<title>Warner Super Service — Podium Account Audit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+
+  :root {
+    --paper:        #f3f5f7;
+    --surface:      #ffffff;
+    --surface-2:    #eceff2;
+    --border:       #d6dce3;
+    --border-strong:#b7c0cb;
+    --ink:          #171f28;
+    --ink-soft:     #39434f;
+    --muted:        #626d79;
+    --accent:       #a96811;
+    --accent-soft:  #efe1c9;
+    --flag:         #a5342f;
+    --flag-soft:    #f2dcda;
+    --ok:           #2b6b4f;
+    --ok-soft:      #d8e7df;
+    --warn:         #8f6216;
+    --link:         #1f5b88;
+    --shadow:       0 1px 2px rgba(23,31,40,.06), 0 8px 24px -12px rgba(23,31,40,.18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:        #0d1218;
+      --surface:      #151d26;
+      --surface-2:    #1d2732;
+      --border:       #2a3543;
+      --border-strong:#3a4757;
+      --ink:          #e6ecf2;
+      --ink-soft:     #c1cbd6;
+      --muted:        #8a95a3;
+      --accent:       #e0a54f;
+      --accent-soft:  #382d1a;
+      --flag:         #e78585;
+      --flag-soft:    #37211f;
+      --ok:           #7ec6a4;
+      --ok-soft:      #1e3229;
+      --warn:         #d6a44e;
+      --link:         #7fb7e1;
+      --shadow:       0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:        #0d1218;
+    --surface:      #151d26;
+    --surface-2:    #1d2732;
+    --border:       #2a3543;
+    --border-strong:#3a4757;
+    --ink:          #e6ecf2;
+    --ink-soft:     #c1cbd6;
+    --muted:        #8a95a3;
+    --accent:       #e0a54f;
+    --accent-soft:  #382d1a;
+    --flag:         #e78585;
+    --flag-soft:    #37211f;
+    --ok:           #7ec6a4;
+    --ok-soft:      #1e3229;
+    --warn:         #d6a44e;
+    --link:         #7fb7e1;
+    --shadow:       0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.6);
+  }
+
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: 17px;
+    line-height: 1.62;
+    font-optical-sizing: auto;
+  }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: .70rem;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--ink);
+    text-wrap: balance;
+    margin: 0;
+    line-height: 1.15;
+  }
+
+  a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  code, .mono {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Shell ---------- */
+  .wrap {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 clamp(18px, 4vw, 48px) 96px;
+  }
+
+  header.masthead {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: clamp(40px, 7vw, 80px) clamp(18px, 4vw, 48px) 34px;
+    border-bottom: 1px solid var(--border);
+  }
+  .masthead h1 {
+    font-size: clamp(2rem, 5vw, 3.15rem);
+    font-weight: 700;
+    letter-spacing: -.015em;
+    margin: 14px 0 0;
+  }
+  .masthead .sub {
+    margin: 16px 0 0;
+    max-width: 60ch;
+    color: var(--ink-soft);
+    font-size: 1.06rem;
+  }
+  .beacon {
+    height: 3px;
+    width: 84px;
+    margin-top: 26px;
+    background: linear-gradient(90deg, var(--accent), var(--accent) 62%, transparent);
+    border-radius: 2px;
+  }
+  .masthead .meta {
+    margin-top: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+  }
+  .masthead .meta span {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: .72rem;
+    letter-spacing: .04em;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 8px;
+    background: var(--surface);
+  }
+
+  /* ---------- Layout grid ---------- */
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  @media (min-width: 1000px) {
+    .layout {
+      grid-template-columns: 214px minmax(0, 1fr);
+      gap: 52px;
+      align-items: start;
+    }
+    nav.toc {
+      position: sticky;
+      top: 28px;
+      padding-top: 44px;
+    }
+  }
+
+  nav.toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-left: 1px solid var(--border);
+  }
+  nav.toc a {
+    display: block;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: .74rem;
+    letter-spacing: .02em;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 6px 0 6px 14px;
+    margin-left: -1px;
+    border-left: 2px solid transparent;
+  }
+  nav.toc a:hover { color: var(--ink); border-left-color: var(--border-strong); }
+  @media (max-width: 999px) {
+    nav.toc { display: none; }
+  }
+
+  main { padding-top: 44px; min-width: 0; }
+
+  section { scroll-margin-top: 24px; }
+  section + section { margin-top: 68px; }
+
+  .sec-head { margin-bottom: 22px; }
+  .sec-head h2 {
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 600;
+    letter-spacing: -.01em;
+    margin-top: 6px;
+  }
+  .prose { max-width: 68ch; }
+  .prose p { margin: 0 0 1.05em; }
+  .prose p:last-child { margin-bottom: 0; }
+  .prose strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- Cards & panels ---------- */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: clamp(20px, 3vw, 30px);
+    box-shadow: var(--shadow);
+  }
+  .panel.flush { padding: 0; overflow: hidden; }
+
+  .bottomline {
+    border-left: 3px solid var(--accent);
+  }
+  .bottomline p { margin: 0 0 .9em; }
+  .bottomline p:last-child { margin-bottom: 0; }
+
+  /* ---------- Company profile ---------- */
+  .profile {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  @media (min-width: 560px) {
+    .profile { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1180px) {
+    .profile { grid-template-columns: repeat(3, 1fr); }
+  }
+  .pgroup {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+    box-shadow: var(--shadow);
+  }
+  .pgroup.wide { grid-column: 1 / -1; }
+  @media (min-width: 1180px) {
+    .pgroup.span2 { grid-column: span 2; }
+  }
+  .pgroup h3 {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: .64rem;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 15px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid var(--border);
+  }
+  .pgroup dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: minmax(88px, auto) 1fr;
+    gap: 9px 16px;
+    align-items: baseline;
+  }
+  .pgroup.stack dl { grid-template-columns: 1fr; gap: 12px; }
+  .pgroup.stack dt { margin-bottom: 2px; }
+  .pgroup dt {
+    font-family: "Archivo", system-ui, sans-serif;
+    font-size: .74rem;
+    font-weight: 600;
+    letter-spacing: .01em;
+    color: var(--muted);
+  }
+  .pgroup dd {
+    margin: 0;
+    font-size: .94rem;
+    line-height: 1.42;
+    color: var(--ink);
+  }
+  .pgroup dd em { color: var(--ink-soft); font-style: italic; }
+  .pgroup.ids dd { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: .76rem; word-break: break-all; }
+
+  /* ---------- Ledger ---------- */
+  .ledger {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .lrow {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px 20px;
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+  }
+  @media (min-width: 620px) {
+    .lrow { grid-template-columns: 168px minmax(0,1fr) auto; align-items: baseline; }
+  }
+  .lrow .when { font-family:"IBM Plex Mono",monospace; font-size:.78rem; color:var(--muted); letter-spacing:.02em; }
+  .lrow .what { font-family:"Archivo",sans-serif; font-weight:600; font-size:1rem; color:var(--ink); }
+  .lrow .what small { display:block; font-family:"Source Serif 4",serif; font-weight:400; font-size:.9rem; color:var(--ink-soft); margin-top:3px; }
+  .lrow .cost { font-family:"IBM Plex Mono",monospace; font-size:.82rem; color:var(--ink); white-space:nowrap; }
+  .lrow .cost.free { color: var(--ok); }
+
+  /* ---------- Sold-vs-reality audit ---------- */
+  .audit {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+  .call {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    overflow: hidden;
+  }
+  .call > header {
+    padding: 18px clamp(18px,3vw,26px);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
+  }
+  .call > header .date { font-family:"IBM Plex Mono",monospace; font-size:.76rem; color:var(--accent); font-weight:600; letter-spacing:.03em; }
+  .call > header h3 { font-size:1.12rem; font-weight:600; flex:1 1 auto; min-width: 60%;}
+  .call > header .rep { font-family:"IBM Plex Mono",monospace; font-size:.72rem; color:var(--muted); }
+  .call-body { padding: clamp(18px,3vw,26px); }
+  .call-body > p:first-child { margin-top: 0; }
+  .call-body .pitch-label {
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.66rem; letter-spacing:.14em; text-transform:uppercase;
+    color: var(--muted);
+    margin: 4px 0 10px;
+  }
+  ul.sold {
+    list-style: none;
+    margin: 0 0 18px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  ul.sold li {
+    position: relative;
+    padding-left: 22px;
+    font-size: .96rem;
+    line-height: 1.5;
+  }
+  ul.sold li::before {
+    content: "";
+    position: absolute;
+    left: 4px; top: .62em;
+    width: 7px; height: 7px;
+    border: 1.5px solid var(--accent);
+    border-radius: 50%;
+  }
+  .reality {
+    border-top: 1px dashed var(--border-strong);
+    padding-top: 15px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 12px;
+  }
+  .reality .tag {
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.64rem; letter-spacing:.12em; text-transform:uppercase;
+    color: var(--flag);
+    padding-top: 3px;
+  }
+  .reality p { margin: 0; font-size: .93rem; color: var(--ink-soft); }
+  .reality.settled .tag { color: var(--ok); }
+
+  /* ---------- Complaints ---------- */
+  .complaints { display:flex; flex-direction:column; gap: 12px; }
+  .cx {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--muted);
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+  .cx.sev-high  { border-left-color: var(--flag); }
+  .cx.sev-med   { border-left-color: var(--warn); }
+  .cx.sev-low   { border-left-color: var(--ok); }
+  .cx h4 { font-size: 1rem; font-weight: 600; display:flex; flex-wrap:wrap; gap: 8px; align-items:baseline;}
+  .cx .sev {
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.60rem; letter-spacing:.12em; text-transform:uppercase;
+    padding: 2px 6px; border-radius: 4px;
+    background: var(--surface-2); color: var(--muted);
+  }
+  .cx.sev-high .sev { background: var(--flag-soft); color: var(--flag); }
+  .cx.sev-med  .sev { background: var(--accent-soft); color: var(--warn); }
+  .cx.sev-low  .sev { background: var(--ok-soft); color: var(--ok); }
+  .cx p { margin: 8px 0 0; font-size: .93rem; color: var(--ink-soft); }
+  .cx .win { margin-top: 6px; font-size:.85rem; color: var(--muted); }
+  .cx .win b { color: var(--ok); font-weight: 600; }
+
+  /* ---------- Timeline ---------- */
+  .timeline {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .tl {
+    display: grid;
+    grid-template-columns: 96px minmax(0,1fr);
+    gap: 0 20px;
+    padding: 14px 0 18px;
+    border-top: 1px solid var(--border);
+    position: relative;
+  }
+  .tl:first-child { border-top: 0; }
+  .tl .date {
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.72rem;
+    color: var(--muted);
+    letter-spacing: .01em;
+    padding-top: 2px;
+  }
+  .tl .body h4 {
+    font-family:"Archivo",sans-serif;
+    font-size: .98rem;
+    font-weight: 600;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: baseline;
+  }
+  .tl .body p { margin: 5px 0 0; font-size: .92rem; color: var(--ink-soft); max-width: 64ch; }
+  .tl .body p a { font-family:"IBM Plex Mono",monospace; font-size:.82em; }
+  .kind {
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.58rem;
+    letter-spacing:.11em;
+    text-transform:uppercase;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--surface-2);
+    color: var(--muted);
+    white-space: nowrap;
+    align-self: center;
+  }
+  .kind.k-sale    { background: var(--accent-soft); color: var(--warn); }
+  .kind.k-onboard { background: var(--ok-soft); color: var(--ok); }
+  .kind.k-friction{ background: var(--flag-soft); color: var(--flag); }
+  .kind.k-billing { background: var(--flag-soft); color: var(--flag); }
+  .kind.k-milestone{ background: var(--ink); color: var(--paper); }
+  :root[data-theme="dark"] .kind.k-milestone,
+  :root:not([data-theme="light"]) .kind.k-milestone { color: var(--surface); }
+
+  .tl.pin .date::before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    margin-top: 4px;
+    width: 9px; height: 9px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px var(--paper);
+  }
+  @media (max-width: 560px) {
+    .tl { grid-template-columns: 1fr; gap: 4px; }
+    .lrow .cost { justify-self: start; }
+  }
+
+  /* ---------- Callout ---------- */
+  .watch {
+    background: var(--flag-soft);
+    border: 1px solid color-mix(in srgb, var(--flag) 40%, transparent);
+    border-radius: 10px;
+    padding: clamp(18px,3vw,26px);
+  }
+  .watch h3 { color: var(--flag); font-size: 1.05rem; font-weight: 700; }
+  .watch ol { margin: 12px 0 0; padding-left: 20px; }
+  .watch li { margin: 0 0 8px; font-size: .95rem; color: var(--ink); }
+  .watch li:last-child { margin-bottom: 0; }
+
+  /* ---------- Sources ---------- */
+  .sources {
+    margin-top: 74px;
+    padding-top: 26px;
+    border-top: 1px solid var(--border);
+  }
+  .sources h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; }
+  .srclist { display:flex; flex-direction:column; gap: 10px; }
+  .srclist a, .srclist span.noln {
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.8rem;
+    word-break: break-all;
+  }
+  .srclist .lbl { color: var(--muted); display:block; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; margin-bottom:2px; }
+  .disclaimer {
+    margin-top: 22px;
+    font-size: .82rem;
+    color: var(--muted);
+    max-width: 70ch;
+  }
+</style>
+
+<header class="masthead">
+  <p class="eyebrow">Podium · Account Audit · prepared 27 Aug 2026</p>
+  <h1>Warner Super Service</h1>
+  <p class="sub">Full relationship history with Podium — what was bought, what was sold, where the friction sits, and what to watch going into the ServiceTitan-displacement migration.</p>
+  <div class="beacon"></div>
+  <div class="meta">
+    <span>HVAC &amp; Plumbing</span>
+    <span>Oxon Hill, MD 20745</span>
+    <span>d/b/a REAL PLUMBERS</span>
+    <span>Customer since Dec 2021</span>
+    <span>SF Case 01059453</span>
+    <span>Package: Professional</span>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="layout">
+
+  <nav class="toc" aria-label="Section navigation">
+    <ol>
+      <li><a href="#bottom-line">Bottom line</a></li>
+      <li><a href="#profile">Company profile</a></li>
+      <li><a href="#ledger">Product &amp; contract ledger</a></li>
+      <li><a href="#sold">What they were sold on</a></li>
+      <li><a href="#complaints">Major complaints</a></li>
+      <li><a href="#timeline">Full timeline</a></li>
+      <li><a href="#watch">Watch items</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <section id="bottom-line">
+      <div class="sec-head">
+        <p class="eyebrow">01 — Summary</p>
+        <h2>Bottom line</h2>
+      </div>
+      <div class="panel bottomline prose">
+        <p>Warner Super Service is a roughly 40-year-old family-run HVAC &amp; plumbing shop in Oxon Hill, MD (owner <strong>Dave Warner</strong>; office manager <strong>Danielle Stewardson</strong>). It has been a Podium customer since <strong>December 2021</strong>, originally for reviews / messaging and Podium credit-card readers.</p>
+        <p>The account was effectively re-onboarded in <strong>mid-2025</strong> onto <strong>Podium Phones</strong> (discounted, first 18 months free) plus <strong>text &amp; voice AI</strong> ("Trudy"). Blended Podium spend today is about <strong>$1,428/mo</strong>.</p>
+        <p>It is a <strong>financially fragile, operationally thin</strong> account: chronic payment arrears, an owner focused on paying down debt, three field techs and a single person in the office. Its two persistent pain points are <strong>AI accuracy</strong> and a <strong>ServiceTitan booking integration that never fully worked</strong>.</p>
+        <p>A June 2026 FSM/CRM upsell ($1,199/mo) was pitched to and liked by Danielle but <strong>vetoed by Dave</strong>. It was revived and closed on <strong>20 Aug 2026</strong> only because ServiceTitan is ending its Podium integration under a hard deadline — forcing a full migration. Podium sold the entire FSM as the landing spot at the ServiceTitan-refugee rate of <strong>$799/mo for year one</strong> ($1,199 thereafter) plus a <strong>$1,000 one-time onboarding fee</strong>. That migration is the current onboarding work (Case 01059453, kickoff 28 Aug 2026).</p>
+      </div>
+    </section>
+
+    <section id="profile">
+      <div class="sec-head">
+        <p class="eyebrow">02 — Context</p>
+        <h2>Company profile</h2>
+      </div>
+      <div class="profile">
+
+        <div class="pgroup">
+          <h3>The business</h3>
+          <dl>
+            <dt>Name</dt><dd>Warner Super Service, Inc.<br><em>d/b/a REAL PLUMBERS</em></dd>
+            <dt>Trade</dt><dd>Residential + light-commercial HVAC &amp; plumbing; backflow</dd>
+            <dt>Since</dt><dd>1987 — "Taking care of homes like yours"</dd>
+            <dt>Location</dt><dd>7321 Livingston Road, Oxon Hill, MD 20745</dd>
+          </dl>
+        </div>
+
+        <div class="pgroup">
+          <h3>People</h3>
+          <dl>
+            <dt>Owner</dt><dd>Dave Warner — also runs field work daily</dd>
+            <dt>Office</dt><dd>Danielle Stewardson (GM / dispatch / billing) — <em>sole office staff since Feb 2026</em></dd>
+            <dt>Field</dt><dd>3 techs + 1 new apprentice; 4–5 trucks sitting idle</dd>
+          </dl>
+        </div>
+
+        <div class="pgroup">
+          <h3>Systems &amp; operations</h3>
+          <dl>
+            <dt>FSM of record</dt><dd>ServiceTitan (pre-dates Danielle) → migrating to Podium</dd>
+            <dt>Accounting</dt><dd>QuickBooks Desktop — owner's wife runs it; owner has no login</dd>
+            <dt>Database</dt><dd>~20,000 customer files in ServiceTitan</dd>
+            <dt>Memberships</dt><dd>~190 total, only ~29 monthly — and shrinking</dd>
+            <dt>Service fees</dt><dd>$89 standard · $389 emergency <em>(AI instructed never to quote these)</em></dd>
+          </dl>
+        </div>
+
+        <div class="pgroup span2">
+          <h3>Podium relationship</h3>
+          <dl>
+            <dt>Customer since</dt><dd>December 2021</dd>
+            <dt>Package</dt><dd>Professional</dd>
+            <dt>Current spend</dt><dd>≈ $1,428 / mo (Professional + text/voice AI + phones)</dd>
+            <dt>Team</dt><dd>AE Jon Meyers · CSM Kathleen Bowman · prior CSMs Rachel Weiss, Colin Murdock</dd>
+            <dt>Flagship win</dt><dd>Google rating 4.1 → 4.7 since adopting Podium (cited in every review call)</dd>
+          </dl>
+        </div>
+
+        <div class="pgroup ids stack">
+          <h3>Record IDs</h3>
+          <dl>
+            <dt>Org UID</dt><dd>1ed9b168-0876-5b54-9395-426221983b0d</dd>
+            <dt>SF account</dt><dd>0015G00001tiNpCQAU</dd>
+            <dt>Onboarding case</dt><dd>01059453 · integration case 01059454</dd>
+          </dl>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="ledger">
+      <div class="sec-head">
+        <p class="eyebrow">03 — What they bought</p>
+        <h2>Product &amp; contract ledger</h2>
+      </div>
+      <div class="ledger">
+        <div class="lrow">
+          <span class="when">2021–2022</span>
+          <span class="what">Core Podium + card readers
+            <small>Reviews, Webchat, team inbox, contact-us form → leads. "SJ – Closed 10 field readers 1/24/22." Onboarding calls Dec 2021 – Feb 2022.</small>
+          </span>
+          <span class="cost">baseline</span>
+        </div>
+        <div class="lrow">
+          <span class="when">Sold 27 Mar 2025</span>
+          <span class="what">Text AI ("Jerry" / "Trudy")
+            <small>Speed-to-lead auto-response, qualifying, 24h/48h cold-lead follow-up, upsell/cross-sell. Bulk messaging (1,500 credits) already included but unused.</small>
+          </span>
+          <span class="cost">$625 / mo</span>
+        </div>
+        <div class="lrow">
+          <span class="when">Sold 23 Apr 2025</span>
+          <span class="what">Podium Phones + Voice AI
+            <small>5 users, 3 desk phones (2× Yealink T54W, 1× T34W). List $150/mo → 20% Goodman-partner discount → $120/mo. 2-yr term.</small>
+          </span>
+          <span class="cost">$120 / mo</span>
+        </div>
+        <div class="lrow">
+          <span class="when">Apr 2025</span>
+          <span class="what">Phones incentive — first 18 months free
+            <small>Podium waived 18 of 24 months of phone fees to offset an early-terminated BNB VoIP contract; cash-buyout assistance offered.</small>
+          </span>
+          <span class="cost free">$0 × 18 mo</span>
+        </div>
+        <div class="lrow">
+          <span class="when">Jul 2025</span>
+          <span class="what">One-time setup — hardware + network optimization
+            <small>$377 hardware + $500 network-optimization site visit. Landed as a surprise "big lump sum" on the July invoice → billing dispute.</small>
+          </span>
+          <span class="cost">$877 once</span>
+        </div>
+        <div class="lrow">
+          <span class="when">Sold 3 Jun 2026</span>
+          <span class="what">Podium FSM / CRM add-on <em>(vetoed by owner 12 Jun)</em>
+            <small>All-in-one dispatch/estimates/invoicing + Membership AI + AI Operator. Danielle on board; Dave declined — debt paydown, no appetite for disruption.</small>
+          </span>
+          <span class="cost">$1,199 / mo</span>
+        </div>
+        <div class="lrow">
+          <span class="when">Closed 20 Aug 2026</span>
+          <span class="what">Podium FSM — ServiceTitan displacement <em>(now in onboarding)</em>
+            <small>Full FSM as the forced-migration landing spot. 1–5 tech tier, 12-month term, data portable back out. $1,000 one-time onboarding. $799/mo year one, $1,199/mo thereafter. AI Operator may become a paid add-on.</small>
+          </span>
+          <span class="cost">$799→$1,199 / mo<br>+ $1,000 once</span>
+        </div>
+        <div class="lrow">
+          <span class="when">Post-migration</span>
+          <span class="what">Projected total Podium spend
+            <small>Current ≈ $1,428 + FSM $799 (yr 1). Rises to ≈ $2,627/mo in year two, before any AI Operator add-on — against a chronic-arrears payment history.</small>
+          </span>
+          <span class="cost">≈ $2,227 / mo</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="sold">
+      <div class="sec-head">
+        <p class="eyebrow">04 — Sales-call audit</p>
+        <h2>What they were sold on</h2>
+      </div>
+      <p class="prose" style="margin-bottom:24px;">Each block below is drawn from the full Gong transcript of the call — the specific pitch made, followed by how it has actually played out on the account.</p>
+
+      <div class="audit">
+
+        <article class="call">
+          <header>
+            <span class="date">27 Mar 2025 · 40m</span>
+            <h3>Account Review — Text AI pitch</h3>
+            <span class="rep">Jon Meyers → Danielle</span>
+          </header>
+          <div class="call-body">
+            <p class="pitch-label">Pitched</p>
+            <ul class="sold">
+              <li><strong>Speed-to-lead.</strong> Every lead answered in under 60 seconds, including nights and weekends — "you're 80% less likely to convert after 5 minutes."</li>
+              <li><strong>10× ROI claim.</strong> "We sold about $20M of our AI solution and it sold about $200M of HVAC service and sales deals… on average it's like a 10× return." "It can pay for your entire Podium for the year."</li>
+              <li><strong>Autonomous follow-up &amp; upsell.</strong> AI re-engages cold leads at 24h and 48h, and cross-sells mid-conversation ("Larry's like your best sales rep").</li>
+              <li><strong>Indistinguishable from a human</strong> — the "Josh the detective" anecdote: customer left a 5-star review praising "someone, not an AI."</li>
+              <li><strong>Fast onboarding</strong> — 1–2 config calls, ~2 weeks, then light-touch tuning via a Q&amp;A section.</li>
+              <li><strong>Bulk messaging</strong> (1,500 credits, already in their plan, unused) — seasonal and "tariff urgency" campaigns suggested.</li>
+            </ul>
+            <div class="reality">
+              <span class="tag">Since then</span>
+              <p>They did buy the AI in the 2025 onboarding. No lead-volume check was done on the call despite Danielle flagging "we're not getting a zillion leads." The "can't tell it's AI" selling point later inverted into a liability — per Dave (Aug 2026), a Trudy over-promise produced a <em>bad</em> Google review. Accuracy problems (wrong same-day messaging, wrong service-area denials, false diagnostic-fee claims, name reverting to "Jessica") ran from Dec 2025 through May 2026.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="call">
+          <header>
+            <span class="date">23 Apr 2025 · 37m</span>
+            <h3>Phones + Voice AI pitch</h3>
+            <span class="rep">Jon Meyers + Colin Murdock → Danielle</span>
+          </header>
+          <div class="call-body">
+            <p class="pitch-label">Pitched</p>
+            <ul class="sold">
+              <li><strong>One number for call + text</strong>, with a caller-ID pop showing transcribed call history and "bold-note" summaries.</li>
+              <li><strong>"Press 2 to text instead"</strong> deflection to cut call volume; missed-call auto-text and voice AI so "you never miss a call."</li>
+              <li><strong>Revenue anecdote</strong> — "Mountaineer Heating &amp; Cooling missed 20% of sales calls… recovered almost $1M that year."</li>
+              <li><strong>Pricing</strong> — $150/mo list → 20% Goodman-partner discount → $120/mo for 5 users; <strong>first 18 months free</strong> on a 2-year term; $877 setup ($377 hardware + $500 network-optimization visit).</li>
+              <li><strong>Contract help</strong> — Podium offered to assist with a cash-buyout of their existing BNB VoIP contract, signed only months earlier.</li>
+            </ul>
+            <div class="reality">
+              <span class="tag">Since then</span>
+              <p>Phones + voice AI were onboarded in summer 2025. Follow-on friction: a physically stuck "1" key (ticket 00861624), greeting/introscript not playing, the Maryland call-recording announcement playing twice, and the ServiceTitan "green bubble" screen-pop repeatedly breaking. The $500 network-optimization fee plus phone install were the "big lump sum" that triggered the first billing dispute.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="call">
+          <header>
+            <span class="date">3 Jun 2026 · 1h 14m</span>
+            <h3>FSM / CRM demo</h3>
+            <span class="rep">Jon Meyers → Danielle</span>
+          </header>
+          <div class="call-body">
+            <p class="pitch-label">Pitched</p>
+            <ul class="sold">
+              <li><strong>All-in-one AI operating system</strong> — dispatch, calendar, estimates, invoicing, job history and comms in one place; "no more bouncing between ServiceTitan and Podium."</li>
+              <li><strong>Soft booking</strong> (AI gathers everything → drag-and-drop onto the calendar) as the low-risk on-ramp; route- and skill-aware scheduling.</li>
+              <li><strong>Membership AI</strong> — automated outreach to the ~190 members plus mining the 20,000 non-members; "190 → 1,900 in a year"; "feels like you got a part-time employee back."</li>
+              <li><strong>AI Operator (beta)</strong> — plain-English reporting on margins / rep performance / routes, auto follow-up on unaccepted estimates and unpaid invoices, scheduled email digests. Flagged as a possible future paid add-on.</li>
+              <li><strong>Migration</strong> — AI-assisted, "not a 6-month nightmare," ~2–3 weeks; techs trained before go-live; price book imported; free Profit Rhino live price book coming.</li>
+              <li><strong>Pricing</strong> — $1,199/mo add-on (on top of current ~$1,428); tiered 1–5 techs; possible free months to break the ServiceTitan contract early.</li>
+            </ul>
+            <div class="reality">
+              <span class="tag">Since then</span>
+              <p>Danielle was sold ("that's a good price… sounds great"), but <strong>Dave killed it on 12 Jun 2026</strong>: "he has ZERO desire to change anything right now… paying off outstanding debt, getting stabilized." Jon rebutted (debt = the reason to switch: faster collections, dead-estimate recovery, tap-to-pay at 2.6% vs 3–3.5%), but it stayed dead until ServiceTitan forced the issue.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="call">
+          <header>
+            <span class="date">20 Aug 2026 · 46m</span>
+            <h3>FSM close — with the owner</h3>
+            <span class="rep">Kathleen Bowman + Jon Meyers → Dave</span>
+          </header>
+          <div class="call-body">
+            <p><strong>Framing:</strong> "ServiceTitan has gone completely unresponsive" to Podium's CEO and is ending the integration; hard deadline "the 15th." Podium positioned the FSM as the forced-migration landing spot with priority onboarding.</p>
+            <p class="pitch-label">Pitched to Dave's hot buttons</p>
+            <ul class="sold">
+              <li><strong>Continuity</strong> — keeps the QuickBooks flow (auto integration, Desktop supported, "you don't have to do anything"); data portable back to ServiceTitan later, and "membership agreements are gold" if he sells the business.</li>
+              <li><strong>Soft booking</strong> — Dave explicitly wants scheduling control with his small crew and subs.</li>
+              <li><strong>Membership AI</strong> as the headline value — the 190 → growth story, bulk campaigns, "3× more likely to sign up if told ahead of time."</li>
+              <li><strong>AI Operator</strong> for estimate / invoice / cold-lead follow-up "without hiring anybody."</li>
+              <li><strong>Mobile</strong> — full price-book access for owner and tech (a specific ServiceTitan gripe); "we beat ServiceTitan on the mobile experience."</li>
+              <li><strong>Pricing</strong> — $1,199/mo, <strong>$799/mo for year one</strong> (ServiceTitan-refugee rate), <strong>$1,000 one-time onboarding</strong>, ~2-week priority onboarding, 1–5 tech tier, 12-month term.</li>
+            </ul>
+            <div class="reality">
+              <span class="tag">Now</span>
+              <p>This is the deal in onboarding (Case 01059453, kickoff 28 Aug 2026). Salesforce onboarding flags: Phones / AI / Platform onboarding "No"; <strong>SOR (system-of-record) onboarding "Yes."</strong> Post-migration spend ≈ $2,227/mo in year one, ≈ $2,627/mo year two — before AI Operator.</p>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="complaints">
+      <div class="sec-head">
+        <p class="eyebrow">05 — Friction</p>
+        <h2>Major complaints &amp; recurring friction</h2>
+      </div>
+      <div class="complaints">
+
+        <div class="cx sev-high">
+          <h4>AI ("Trudy") reliability <span class="sev">recurring · Dec 25 – May 26</span></h4>
+          <p>Over-promising / confirming appointment times, telling customers same-day needs "24 hours," wrongly denying service areas (Upper Marlboro / 20772), stating a false diagnostic-fee-toward-repair credit, and the AI name reverting to "Jessica" after an upgrade.</p>
+          <p class="win">Owner attributes <b>at least one bad Google review</b> to a Trudy over-promise (stated on the 20 Aug 2026 call).</p>
+        </div>
+
+        <div class="cx sev-high">
+          <h4>ServiceTitan ↔ Podium booking integration never worked <span class="sev">Apr – May 26, unresolved</span></h4>
+          <p>AI-gathered bookings repeatedly failed to land in the ServiceTitan bookings window. Team fully disconnected/reconnected the integration, generated new API keys, re-tested twice — still failing — and escalated to a text-AI engineer. Danielle openly worried "ServiceTitan is potentially cutting out Podium." Still open when the migration was sold.</p>
+        </div>
+
+        <div class="cx sev-med">
+          <h4>Unresolved billing disputes <span class="sev">Jul 25 → Apr 26</span></h4>
+          <p>A ~$498–$500 July line item Danielle believes was double-charged, re-raised with Rachel Weiss (Dec 2025) and again with Kathleen (Apr 2026), never closed out. Confusion compounded by CSM handoffs, net-30 terms and a "system transition." The $500 network-optimization + phone install also hit as an unexpected lump.</p>
+        </div>
+
+        <div class="cx sev-med">
+          <h4>Chronically behind on payments <span class="sev">Feb–Apr 25 · again Apr 26</span></h4>
+          <p>Arrears on Feb/Mar/Apr 2025 invoices delayed a renewal quote through deal desk; behind again in April 2026. Cause per Danielle: slow shoulder seasons + slow-paying commercial work. Per Dave (2026): actively paying down business debt and "getting stabilized."</p>
+        </div>
+
+        <div class="cx sev-low">
+          <h4>Desktop app performance <span class="sev">raised Aug 25</span></h4>
+          <p>Podium desktop app noticeably slowed Danielle's Windows 10 machine; no spell-check or right-click correction. Logged as product feedback.</p>
+        </div>
+
+        <div class="cx sev-low">
+          <h4>Phone hardware <span class="sev">ticket 00861624 · Nov 25</span></h4>
+          <p>Desk-phone "1" key physically sticking / auto-repeating. Diagnosed by support as a mis-seated key.</p>
+        </div>
+
+        <div class="cx sev-med">
+          <h4>CSM churn &amp; lost context <span class="sev">2025–2026</span></h4>
+          <p>Kathleen → Rachel Weiss → back to Kathleen. Billing history and AI configuration were re-explained from scratch across each handoff, which is part of why the billing dispute never closed.</p>
+        </div>
+
+        <div class="cx sev-high">
+          <h4>Understaffed &amp; fragile <span class="sev">structural</span></h4>
+          <p>The office lost a staff member (passed away, Feb 2026), leaving Danielle alone with an owner who is mostly in the field. Every initiative — especially the membership program that anchors every recent sales pitch — stalls for lack of bandwidth.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="timeline">
+      <div class="sec-head">
+        <p class="eyebrow">06 — Chronology</p>
+        <h2>Full timeline</h2>
+      </div>
+      <p class="prose" style="margin-bottom:22px;">Compiled from the Salesforce activity history (Dec 2021 – Aug 2026). Amber dots mark the four transcript-audited sales calls.</p>
+
+      <div class="timeline">
+
+        <div class="tl"><span class="date">Dec 2021</span><div class="body"><h4>Podium account setup <span class="kind k-onboard">Onboard</span></h4><p>Account-setup call with Scott Langbauer, Danielle and Chaise — "onboarding and implementation."</p></div></div>
+        <div class="tl"><span class="date">Jan–Feb 2022</span><div class="body"><h4>Implementation + card readers <span class="kind k-onboard">Onboard</span></h4><p>Podium onboarding plus credit-card-reader rollout. "SJ – Closed 10 field readers 1/24/22."</p></div></div>
+        <div class="tl"><span class="date">Feb 2022</span><div class="body"><h4>Podium drop-in / lunch <span class="kind">Admin</span></h4><p>Relationship visit (Sean Jolley).</p></div></div>
+        <div class="tl"><span class="date">May 2023</span><div class="body"><h4>"Podium Onboarding" re-engagement <span class="kind k-onboard">Onboard</span></h4><p>Meetings booked with Clyde Canizares and Kristin Dodrill.</p></div></div>
+        <div class="tl"><span class="date">6 Oct 2023</span><div class="body"><h4>ServiceTitan integration issues <span class="kind k-friction">Friction</span></h4><p>1-hour meeting with Joseph Rose (case 00175590): "Resolve issues with your ServiceTitan integration." — first recorded instance of the integration problem that never fully went away.</p></div></div>
+        <div class="tl"><span class="date">Aug 2024</span><div class="body"><h4>Meeting with Keith <span class="kind">Admin</span></h4><p>Check-in via Chili Piper (Keith McCarthy).</p></div></div>
+
+        <div class="tl pin"><span class="date">27 Mar 2025</span><div class="body"><h4>Text AI pitch — $625/mo <span class="kind k-sale">Sale</span></h4><p>Jon Meyers account review. Speed-to-lead, 10× ROI framing, bulk messaging. Google 4.1→4.7 cited as the existing win. <a href="https://podium.app.gong.io/call?id=8223151266831056871">Gong transcript ↗</a></p></div></div>
+        <div class="tl"><span class="date">14 Apr 2025</span><div class="body"><h4>Account review — Colin Murdock <span class="kind">Check-in</span></h4><p>Surfaces unused tap-to-pay; Danielle considering AI "in 2–3 months"; wants voice AI tied to ServiceTitan booking.</p></div></div>
+        <div class="tl pin"><span class="date">23 Apr 2025</span><div class="body"><h4>Phones + Voice AI pitch — $120/mo <span class="kind k-sale">Sale</span></h4><p>Jon Meyers + Colin Murdock. 18 months free, $877 setup, Goodman discount, BNB buyout help. Account is behind on Feb/Mar/Apr invoices. <a href="https://podium.app.gong.io/call?id=7964091729022568300">Gong transcript ↗</a></p></div></div>
+        <div class="tl"><span class="date">1–2 Jul 2025</span><div class="body"><h4>Onboarding kickoff — Phones + AI <span class="kind k-onboard">Onboard</span></h4><p>Kathleen Bowman + Jon Meyers (case 00777011). Port main line, contact-form → leads, "green bubble" with ServiceTitan, "Trudy" AI, "no soft booking — just qualifying."</p></div></div>
+        <div class="tl"><span class="date">16–28 Jul 2025</span><div class="body"><h4>Rapid onboarding sprint <span class="kind k-onboard">Onboard</span></h4><p>AI training, voice-AI fee handling ($89 / $389), number porting (Sky Telecom PIN trouble), lines 567-2001 &amp; 567-6101 ported, hours M–F 8–5. Go-live Mon 28 Jul.</p></div></div>
+        <div class="tl"><span class="date">6–13 Aug 2025</span><div class="body"><h4>Post-launch tuning <span class="kind k-onboard">Onboard</span></h4><p>Call-recording toggles, drip campaigns, bulk messaging, AI follow-up automation. Trudy "taking the BS calls" well; port-in cancelled (keep number, drop old service at term end).</p></div></div>
+        <div class="tl"><span class="date">27 Aug 2025</span><div class="body"><h4>CSM handoff Kathleen → Rachel Weiss <span class="kind k-billing">Billing</span></h4><p>KO CSM call. Billing questions: promo AI rate, ~$1,400/mo going forward, July lump = desk phones + $500 network optimization. On "V1" AI; auto review-responses for 4–5★ enabled.</p></div></div>
+        <div class="tl"><span class="date">21 Nov 2025</span><div class="body"><h4>Support ticket 00861624 <span class="kind k-friction">Friction</span></h4><p>Desk-phone "1" key physically stuck / repeating.</p></div></div>
+        <div class="tl"><span class="date">12 Dec 2025</span><div class="body"><h4>Rachel Weiss call — billing + AI misconfig <span class="kind k-billing">Billing</span></h4><p>~$500 July line item believed double-charged. Integration toggle left on during transition made the AI act as if it could see the schedule. AI wrongly promising same-day "24 hours." ServiceTitan no longer allows payment write-back → manual reconciliation.</p></div></div>
+        <div class="tl"><span class="date">Feb 2026</span><div class="body"><h4>Office staff member passes away <span class="kind k-milestone">Context</span></h4><p>Danielle becomes the sole office person alongside owner Dave.</p></div></div>
+        <div class="tl"><span class="date">Feb–Mar 2026</span><div class="body"><h4>Webinar / case-study participation <span class="kind">Advocacy</span></h4><p>Danielle joins a Podium customer webinar as a reference (swag-bag thank-you); works with "Nico" on a case study.</p></div></div>
+        <div class="tl"><span class="date">9 Apr 2026</span><div class="body"><h4>Check-in — Kathleen <span class="kind k-friction">Friction</span></h4><p>Behind on bill again. Greeting/introscript not playing; AI name defaulting to "Jessica"; MD recording wording; green bubble missing since a cell-phone test; disputed $498 invoice resurfaces; AI wrongly refused Upper Marlboro (20772) → add 50-mile radius.</p></div></div>
+        <div class="tl"><span class="date">23 Apr 2026</span><div class="body"><h4>AI Studio upgrade call — Kathleen <span class="kind k-friction">Friction</span></h4><p>AI almost confirming times (should say "requested/preferred"); homeowner/tenant booking policy; ServiceTitan bookings-window integration still fails a live test. Danielle: worried "ServiceTitan is potentially cutting out Podium."</p></div></div>
+        <div class="tl"><span class="date">7 May 2026</span><div class="body"><h4>Integration troubleshooting — Kathleen <span class="kind k-friction">Friction</span></h4><p>Bookings still not reaching the ServiceTitan window. Disconnect/reconnect, new API keys, two failed re-tests → escalated to a text-AI engineer. Wants C/R/X reminder options.</p></div></div>
+        <div class="tl"><span class="date">18–27 May 2026</span><div class="body"><h4>SDR outbound — FSM demo booked <span class="kind k-sale">Sale</span></h4><p>Gabriel Noel books the FSM / AI Employee demo. "Set – No Objection." Fleet size not captured; 6-truck threshold flagged.</p></div></div>
+        <div class="tl pin"><span class="date">3 Jun 2026</span><div class="body"><h4>FSM / CRM demo — $1,199/mo <span class="kind k-sale">Sale</span></h4><p>Jon Meyers, 1h14m. All-in-one AI OS, Membership AI, AI Operator, AI-assisted migration. Danielle sold. <a href="https://podium.app.gong.io/call?id=8814788043044578680">Gong transcript ↗</a></p></div></div>
+        <div class="tl"><span class="date">12 Jun 2026</span><div class="body"><h4>Owner vetoes the FSM <span class="kind k-friction">Friction</span></h4><p>Danielle emails Jon: Dave "has ZERO desire to change anything right now… paying off outstanding debt, getting stabilized. We will not be moving forward." Jon rebuts; follow-up cancelled then re-set.</p></div></div>
+        <div class="tl pin"><span class="date">20 Aug 2026</span><div class="body"><h4>FSM close with owner Dave <span class="kind k-sale">Sale</span></h4><p>ServiceTitan ending its Podium integration; hard deadline "the 15th." $1,199/mo → $799 year one, $1,000 onboarding, ~2-week priority migration. Dave: "I'll get a decision here soon." <a href="https://podium.app.gong.io/call?id=3685583227148088771">Gong transcript ↗</a></p></div></div>
+        <div class="tl"><span class="date">24 Aug 2026</span><div class="body"><h4>Demo follow-up meeting <span class="kind">Check-in</span></h4><p>Jon Meyers demo follow-up (Zoom).</p></div></div>
+        <div class="tl pin"><span class="date">27 Aug 2026</span><div class="body"><h4>Expansion Onboarding case opened <span class="kind k-milestone">Milestone</span></h4><p>Case 01059453 — "Warner Super Service – Expansion Onboarding," status <span class="mono">KO Scheduled</span>. Onboarding plan 1/8 milestones (8%). SOR onboarding = Yes; no go-live date set.</p></div></div>
+        <div class="tl"><span class="date">28 Aug 2026</span><div class="body"><h4>Kickoff call scheduled <span class="kind k-milestone">Milestone</span></h4><p>Podium Onboarding Kickoff — Danielle + Kathleen Bowman.</p></div></div>
+
+      </div>
+    </section>
+
+    <section id="watch">
+      <div class="sec-head">
+        <p class="eyebrow">07 — Going in</p>
+        <h2>Watch items for the migration</h2>
+      </div>
+      <div class="watch">
+        <h3>Four things that could bite this onboarding</h3>
+        <ol>
+          <li><strong>Spend vs. payment history.</strong> Total Podium spend jumps to ≈ $2,227/mo (yr 1) then ≈ $2,627/mo, on an account with repeated arrears and an owner explicitly paying down debt. The year-two step-up from $799 → $1,199 is a churn/dispute risk.</li>
+          <li><strong>The integration being replaced never worked.</strong> The ServiceTitan booking sync was still failing and escalated to engineering in May 2026. The migration now removes that dependency entirely — but under a hard external deadline, so there's little slack if data or price-book import slips.</li>
+          <li><strong>The membership program is the whole value case — and has never had bandwidth.</strong> Every recent pitch (Jun &amp; Aug 2026) leans on Membership AI growing 190 → ~1,900. With one person in the office, adoption support needs to be hands-on or the ROI story collapses.</li>
+          <li><strong>Unclosed billing dispute + CSM history.</strong> The ~$498–$500 item has been open since mid-2025 across two CSM changes. Resolve it before or during kickoff so it doesn't poison the migration relationship.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="sources" class="sources">
+      <h2>Sources</h2>
+      <div class="srclist">
+        <span><span class="lbl">Salesforce — full activity history (return here for detail)</span><a href="https://podium.lightning.force.com/runtime_sales_activities/activityViewAll.app?parentRecordId=0015G00001tiNpCQAU">https://podium.lightning.force.com/runtime_sales_activities/activityViewAll.app?parentRecordId=0015G00001tiNpCQAU</a></span>
+        <span><span class="lbl">Salesforce — account</span><a href="https://podium.lightning.force.com/lightning/r/Account/0015G00001tiNpCQAU/view">https://podium.lightning.force.com/lightning/r/Account/0015G00001tiNpCQAU/view</a></span>
+        <span><span class="lbl">Salesforce — Expansion Onboarding case 01059453</span><a href="https://podium.lightning.force.com/lightning/r/Case/500U100000sddnDIAQ/view">https://podium.lightning.force.com/lightning/r/Case/500U100000sddnDIAQ/view</a></span>
+        <span><span class="lbl">Gong — 27 Mar 2025, Text AI pitch</span><a href="https://podium.app.gong.io/call?id=8223151266831056871">https://podium.app.gong.io/call?id=8223151266831056871</a></span>
+        <span><span class="lbl">Gong — 23 Apr 2025, Phones + Voice AI pitch</span><a href="https://podium.app.gong.io/call?id=7964091729022568300">https://podium.app.gong.io/call?id=7964091729022568300</a></span>
+        <span><span class="lbl">Gong — 3 Jun 2026, FSM / CRM demo</span><a href="https://podium.app.gong.io/call?id=8814788043044578680">https://podium.app.gong.io/call?id=8814788043044578680</a></span>
+        <span><span class="lbl">Gong — 20 Aug 2026, FSM close with owner</span><a href="https://podium.app.gong.io/call?id=3685583227148088771">https://podium.app.gong.io/call?id=3685583227148088771</a></span>
+      </div>
+      <p class="disclaimer">Compiled 27 Aug 2026 from the Warner Super Service Salesforce activity timeline and full Gong transcripts of the four audited sales calls. Figures such as headcount and location count in Salesforce (109 employees / 7 locations) appear stale and were not used; spend and pricing figures are taken from call transcripts and invoice-related activities. Dates use the activity "due date" where it reflects the event date.</p>
+    </section>
+
+  </main>
+</div>
+</div>
